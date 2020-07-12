@@ -1,7 +1,7 @@
 @font-face {
   font-family: "Rosario-Regular";
   font-style: normal;
-  src: local("Rosario-Regular"), url("assets/fonts/Rosario/static/Rosario-Regular.ttf");
+  src: local("Rosario-Regular"), url("assets/fonts/Rosario/Rosario-Regular.ttf");
 }
 
 body {
