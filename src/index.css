@@ -1,6 +1,12 @@
+@font-face {
+  font-family: "Rosario-Regular";
+  font-style: normal;
+  src: local("Rosario-Regular"), url("assets/fonts/Rosario/static/Rosario-Regular.ttf");
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: "Rosario-Regular", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
