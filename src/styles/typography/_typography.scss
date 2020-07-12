@@ -1,9 +1,64 @@
 @import "fonts";
 
 html {
-  font-size: 16px;
+  font-size: 15px;
 }
 
 body {
   font-family: Rosario;
+}
+
+.headline1 {
+  font-size: 6.8rem;
+}
+
+.headline2 {
+  font-size: 4.26rem;
+}
+
+.headline3 {
+  font-size: 3.4rem;
+}
+
+.headline4 {
+  font-size: 2.4rem;
+}
+
+.headline5 {
+  font-size: 1.66rem;
+  font-weight: bold;
+}
+
+.headline6 {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.body1 {
+  font-size: 1.13rem;
+}
+
+.body2 {
+  font-size: 1rem;
+}
+
+.subtitle1 {
+  font-size: 1.13rem;
+}
+
+.subtitle2 {
+  font-size: 1rem;
+}
+
+.button {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.overline {
+  font-size: 0.73rem;
+}
+
+.caption {
+  font-size: 0.86rem;
 }
