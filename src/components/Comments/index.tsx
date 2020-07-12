@@ -6,6 +6,7 @@ import UpdateComment from "./UpdateComment";
 import DeleteComment from "./DeleteComment";
 import VoteComment from "./VoteComment";
 import FlagComment from "./FlagComment";
+import StateFooter from "../StateFooter";
 
 const tabLabels: string[] = [
   "Comment Create",
@@ -27,10 +28,13 @@ const tabViews: ReactElement[] = [
 
 const Comments: FunctionComponent = () => {
   return (
-    <TabViewsContainer
-      tabLabels={tabLabels}
-      tabViews={tabViews}
-    ></TabViewsContainer>
+    <React.Fragment>
+      <TabViewsContainer
+        tabLabels={tabLabels}
+        tabViews={tabViews}
+      ></TabViewsContainer>
+      <StateFooter />
+    </React.Fragment>
   );
 };
 

@@ -6,6 +6,7 @@ import UpdateReply from "./UpdateReply";
 import DeleteReply from "./DeleteReply";
 import VoteReply from "./VoteReply";
 import FlagReply from "./FlagReply";
+import StateFooter from "../StateFooter";
 
 const tabLabels: string[] = [
   "Reply Create",
@@ -27,10 +28,13 @@ const tabViews: ReactElement[] = [
 
 const Replies: FunctionComponent = () => {
   return (
-    <TabViewsContainer
-      tabLabels={tabLabels}
-      tabViews={tabViews}
-    ></TabViewsContainer>
+    <React.Fragment>
+      <TabViewsContainer
+        tabLabels={tabLabels}
+        tabViews={tabViews}
+      ></TabViewsContainer>
+      <StateFooter />
+    </React.Fragment>
   );
 };
 
