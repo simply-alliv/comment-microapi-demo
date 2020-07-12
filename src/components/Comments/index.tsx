@@ -1,44 +1,37 @@
-import React from "react";
-import {
-  Switch,
-  Route,
-  Link,
-  useParams,
-  useRouteMatch
-} from "react-router-dom";
+import React, { FunctionComponent, ReactElement } from "react";
+import TabViewsContainer from "../TabViewsContainer";
+import CreateComment from "./CreateComment";
+import GetComment from "./GetComment";
+import UpdateComment from "./UpdateComment";
+import DeleteComment from "./DeleteComment";
+import VoteComment from "./VoteComment";
+import FlagComment from "./FlagComment";
 
-function Comments() {
-  let { path, url } = useRouteMatch();
+const tabLabels: string[] = [
+  "Comment Create",
+  "Comment Get",
+  "Comment Update",
+  "Comment Delete",
+  "Comment Vote",
+  "Comment Flag",
+];
 
+const tabViews: ReactElement[] = [
+  <CreateComment />,
+  <GetComment />,
+  <UpdateComment />,
+  <DeleteComment />,
+  <VoteComment />,
+  <FlagComment />,
+];
+
+const Comments: FunctionComponent = () => {
   return (
-    <div style={{ margin: "1rem" }}>
-      <h2>Choose comments demo:</h2>
-      <nav style={{ display: "flex", flexDirection: "column" }}>
-        <Link to={`${url}/create-comment`}>Create</Link>
-        <Link to={`${url}/get-comment`}>Get</Link>
-        <Link to={`${url}/update-comment`}>Update</Link>
-        <Link to={`${url}/delete-comment`}>Delete</Link>
-        <Link to={`${url}/vote-comment`}>Vote</Link>
-        <Link to={`${url}/flag-comment`}>Flag</Link>
-      </nav>
-
-      <Switch>
-        <Route path={`${path}/:demo`}>
-          <CommentsDemo />
-        </Route>
-      </Switch>
-    </div>
+    <TabViewsContainer
+      tabLabels={tabLabels}
+      tabViews={tabViews}
+    ></TabViewsContainer>
   );
-}
-
-function CommentsDemo() {
-  let { demo } = useParams();
-
-  return (
-    <div>
-      <h4>{demo}</h4>
-    </div>
-  );
-}
+};
 
 export default Comments;
