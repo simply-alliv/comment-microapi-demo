@@ -1,0 +1,16 @@
+// Partial stylesheet for fonts used by the application
+@font-face {
+  font-family: "Rosario";
+  font-style: normal;
+  src: url("../../assets/fonts/woff2/Rosario-Regular.woff2") format("woff2"),
+    url("../../assets/fonts/woff/Rosario-Regular.woff") format("woff"),
+    url("../../assets/fonts/ttf/Rosario-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Rosario";
+  font-style: bold;
+  src: url("../../assets/fonts/woff2/Rosario-Bold.woff2") format("woff2"),
+    url("../../assets/fonts/woff/Rosario-Bold.woff") format("woff"),
+    url("../../assets/fonts/ttf/Rosario-Bold.ttf") format("truetype");
+}
