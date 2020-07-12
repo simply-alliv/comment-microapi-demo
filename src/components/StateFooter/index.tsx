@@ -1,14 +1,10 @@
 import React from "react";
-import { Button, Grid, makeStyles } from "@material-ui/core";
+import { Box, Button, makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-    maxWidth: 1000
-  },
-  button: {
-    textTransform: "none"
+    backgroundColor: theme.palette.background.paper
   }
 }));
 
@@ -20,23 +16,20 @@ const StateFooter = () => {
   const handleResetState = (event: any) => {};
   
   return (
-      <Grid
-        container
-        className={classes.root}
-        justify="space-between"
+    <Box className={classes.root}>
+      <Box
+        display="flex"
+        justifyContent="space-between"
         alignItems="flex-end"
       >
-        <Grid item>
-          <Button className={classes.button} onClick={handleViewState}>
-            View Current State
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button className={classes.button} onClick={handleResetState}>
-            Reset State
-          </Button>
-        </Grid>
-    </Grid>
+        <Button onClick={handleViewState}>
+          View Current State
+        </Button>
+        <Button onClick={handleResetState}>
+          Reset State
+        </Button>
+      </Box>
+    </Box>
   );
 };
 
