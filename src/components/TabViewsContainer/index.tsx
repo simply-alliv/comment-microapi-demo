@@ -43,6 +43,8 @@ const TabViewsContainer: FunctionComponent<TabViewsContainerProps> = ({
         <Tabs
           value={value}
           onChange={handleChange}
+          variant="scrollable"
+          scrollButtons="off"
           aria-label={`The tabs for the different ${tabLabels[0]
             .split(" ")[0]
             .toLowerCase()} functionalities.`}
