@@ -24,8 +24,8 @@ const TabPanel: FunctionComponent<TabPanelProps> = ({
       {...other}
     >
       {value === index && (
-        <Box p={3}>
-          <Container>{children}</Container>
+        <Box p={2}>
+          <Container maxWidth="sm">{children}</Container>
         </Box>
       )}
     </div>
