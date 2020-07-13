@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
-import AllComments from "./AllComments";
-import SingleComment from "./SingleComment";
+import AllComments from "./AllComments/index";
+import SingleComment from "./SingleComment/index";
 
 const GetComment: FunctionComponent = () => {
   return (
