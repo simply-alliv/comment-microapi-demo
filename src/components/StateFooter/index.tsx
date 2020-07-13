@@ -20,7 +20,6 @@ const StateFooter = () => {
       <Box
         display="flex"
         justifyContent="space-between"
-        alignItems="flex-end"
       >
         <Button onClick={handleViewState}>
           View Current State
