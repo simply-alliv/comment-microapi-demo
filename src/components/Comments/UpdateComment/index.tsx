@@ -13,7 +13,7 @@ const defaultText =
   "Hey, I hope that you are well. I was just looking to confirm our meeting for 10am sharp this morning. Please get back to me as soon as you get this.";
 
 const UpdateComment: FunctionComponent = () => {
-  const handleChange = (event: any, value: string) => {};
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {};
 
   return (
     <React.Fragment>
