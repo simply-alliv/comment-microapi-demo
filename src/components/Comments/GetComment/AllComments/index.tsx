@@ -24,15 +24,6 @@ const AllComments: FunctionComponent = () => {
 
   const classes = useStyles();
 
-  const handleFilters = (filter: string) => {
-    if (selectedFilters === filter) {
-      setSelectedFilters("");
-    }
-    else {
-      setSelectedFilters(filter);
-    }
-  }
-
   return (
     <Box>
       <TabViewIntroSection
@@ -50,7 +41,11 @@ const AllComments: FunctionComponent = () => {
           <Grid className={classes.root} item xs={6} sm={3} key={filter}>
             <Button
               variant={selectedFilters === filter ? "contained" : "outlined"}
-              onClick={() => handleFilters(filter)}
+              onClick={() => (
+                selectedFilters === filter
+                  ? setSelectedFilters("")
+                  : setSelectedFilters(filter)
+              )}
             >
               {filter}
             </Button>
@@ -58,10 +53,7 @@ const AllComments: FunctionComponent = () => {
         ))}
       </Grid>
       <Box display="flex" flexDirection="column" alignItems="center" mt={6}>
-        <Button
-          variant="contained"
-          color="secondary"
-        >
+        <Button variant="contained" color="secondary">
           Get Comments
         </Button>
       </Box>
