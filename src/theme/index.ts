@@ -12,6 +12,9 @@ const theme = createMuiTheme({
   typography: {
     fontFamily: "Rosario",
     fontSize: 13,
+    button: {
+      textTransform: "none"
+    }
   },
 });
 
