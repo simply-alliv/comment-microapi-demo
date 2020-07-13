@@ -1,5 +1,5 @@
-import React, { FunctionComponent } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import React, { FunctionComponent, useEffect } from "react";
+import { Link as RouterLink, useLocation } from "react-router-dom";
 import Box from "@material-ui/core/Box";
 import AppBar from "@material-ui/core/AppBar";
 import Link from "@material-ui/core/Link";
@@ -7,17 +7,25 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import HomeIcon from "@material-ui/icons/Home";
-import { Page } from "../index";
+import { Routes } from "../index";
 
 type CustomAppBarProps = {
   currentPageState: [any, React.Dispatch<React.SetStateAction<any>>];
+  children?: React.ReactNode;
 };
 
 const CustomAppBar: FunctionComponent<CustomAppBarProps> = ({
   currentPageState,
+  children,
 }) => {
+  let location = useLocation();
+
+  useEffect(() => {
+    currentPageState[1](location.pathname);
+  });
+
   return (
-    <AppBar position="static">
+    <AppBar position="relative" elevation={2}>
       <Toolbar>
         <Box
           display="flex"
@@ -25,39 +33,39 @@ const CustomAppBar: FunctionComponent<CustomAppBarProps> = ({
           alignItems="center"
           width="100%"
         >
-          <Link component={RouterLink} to="/">
+          <Link component={RouterLink} to={Routes.Home}>
             <IconButton
               edge="start"
               aria-label="menu"
-              onClick={() => currentPageState[1](Page.Home)}
+              onClick={() => currentPageState[1](Routes.Home)}
             >
               <HomeIcon />
             </IconButton>
           </Link>
           <Box display="flex">
-            <Link component={RouterLink} to="/comments">
+            <Link component={RouterLink} to={Routes.Comments}>
               <Button
                 variant={
-                  currentPageState[0] === Page.Comments
+                  currentPageState[0] === Routes.Comments
                     ? "contained"
                     : "outlined"
                 }
                 color="secondary"
-                onClick={() => currentPageState[1](Page.Comments)}
+                onClick={() => currentPageState[1](Routes.Comments)}
               >
                 Comments
               </Button>
             </Link>
             <Box mx={1}></Box>
-            <Link component={RouterLink} to="/replies">
+            <Link component={RouterLink} to={Routes.Replies}>
               <Button
                 variant={
-                  currentPageState[0] === Page.Replies
+                  currentPageState[0] === Routes.Replies
                     ? "contained"
                     : "outlined"
                 }
                 color="secondary"
-                onClick={() => currentPageState[1](Page.Replies)}
+                onClick={() => currentPageState[1](Routes.Replies)}
               >
                 Replies
               </Button>
@@ -65,6 +73,7 @@ const CustomAppBar: FunctionComponent<CustomAppBarProps> = ({
           </Box>
         </Box>
       </Toolbar>
+      {children}
     </AppBar>
   );
 };

@@ -28,7 +28,7 @@ const CreateComment: FunctionComponent = () => {
       </Box>
       <Box display="flex" flexDirection="column" alignItems="center" mt={4}>
         <Button variant="contained" color="secondary">
-          Comment
+          Create Comment
         </Button>
       </Box>
     </React.Fragment>

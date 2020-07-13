@@ -16,7 +16,12 @@ const TabViewIntroSection: FunctionComponent<TabViewIntroSectionProps> = ({
   return (
     <React.Fragment>
       {endpoints.map((endpoint) => (
-        <Typography variant="body2" align="center" color="textSecondary">
+        <Typography
+          key={endpoint}
+          variant="body2"
+          align="center"
+          color="textSecondary"
+        >
           {endpoint}
         </Typography>
       ))}
