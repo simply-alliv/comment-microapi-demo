@@ -44,7 +44,7 @@ function App() {
         </CustomAppBar>
         <Switch>
           <Route exact path={Routes.Home}>
-            <Home />
+            <Home currentPageState={[currentPage, setCurrentPage]} />
           </Route>
           <Route path={Routes.Comments}>
             <Comments

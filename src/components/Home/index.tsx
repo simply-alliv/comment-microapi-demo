@@ -1,10 +1,14 @@
 import React, { FunctionComponent } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
+import Link from "@material-ui/core/Link";
+import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import Comment, { CommentProps } from "../Comment";
 import { ReplyProps } from "../Comment/Reply";
+import { Routes } from "../App";
 
 const replies: ReplyProps[] = [
   {
@@ -31,7 +35,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Home: FunctionComponent = () => {
+type HomeProps = {
+  currentPageState: [any, React.Dispatch<React.SetStateAction<any>>];
+};
+
+const Home: FunctionComponent<HomeProps> = ({ currentPageState }) => {
   const classes = useStyles();
 
   return (
@@ -55,6 +63,17 @@ const Home: FunctionComponent = () => {
             creationDate={comment.creationDate}
             replies={comment.replies}
           />
+        </Box>
+        <Box pb={2} display="flex" justifyContent="center">
+          <Link component={RouterLink} to={Routes.Comments}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => currentPageState[1](Routes.Comments)}
+            >
+              Live Demo
+            </Button>
+          </Link>
         </Box>
       </Container>
     </div>
