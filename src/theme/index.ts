@@ -13,8 +13,11 @@ const theme = createMuiTheme({
     fontFamily: "Rosario",
     fontSize: 13,
     button: {
-      textTransform: "none"
-    }
+      textTransform: "none",
+    },
+  },
+  shape: {
+    borderRadius: 10,
   },
 });
 
