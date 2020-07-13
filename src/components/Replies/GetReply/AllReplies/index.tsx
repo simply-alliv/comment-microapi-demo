@@ -2,15 +2,13 @@ import React, { FunctionComponent, useState } from "react";
 import { Box, Button, Grid, makeStyles, Typography } from "@material-ui/core";
 import TabViewIntroSection from "../../../TabViewIntroSection";
 
-const getAllCommentEndpoint = ["GET /comments"];
-const getAllCommentHeading = "GET all comments";
-const getAllCommentSubtitle = "Need to get some comments?";
+const getAllReplyEndpoint = ["GET /comments/:commentId/replies"];
+const getAllReplyHeading = "GET all replies";
+const getAllReplySubtitle = "Need to get some replies?";
 
 const filters = [
   "By flag state",
-  "By reference ID",
   "By owner ID",
-  "By origin",
 ];
 
 const useStyles = makeStyles(() => ({
@@ -19,7 +17,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const AllComments: FunctionComponent = () => {
+const AllReplies: FunctionComponent = () => {
   const [selectedFilters, setSelectedFilters] = useState("");
 
   const classes = useStyles();
@@ -27,13 +25,13 @@ const AllComments: FunctionComponent = () => {
   return (
     <Box>
       <TabViewIntroSection
-        endpoints={getAllCommentEndpoint}
-        heading={getAllCommentHeading}
-        subtitle={getAllCommentSubtitle}
+        endpoints={getAllReplyEndpoint}
+        heading={getAllReplyHeading}
+        subtitle={getAllReplySubtitle}
       ></TabViewIntroSection>
       <Box mt={6} mb={1}>
         <Typography variant="body2" align="center" color="textSecondary">
-          Need to filter for specifc comments? No problem.
+          Need to filter for specifc replies? No problem.
         </Typography>
       </Box>
       <Grid container spacing={2}>
@@ -41,11 +39,11 @@ const AllComments: FunctionComponent = () => {
           <Grid className={classes.root} item xs={6} sm={3} key={filter}>
             <Button
               variant={selectedFilters === filter ? "contained" : "outlined"}
-              onClick={() => (
+              onClick={() =>
                 selectedFilters === filter
                   ? setSelectedFilters("")
                   : setSelectedFilters(filter)
-              )}
+              }
             >
               {filter}
             </Button>
@@ -54,11 +52,11 @@ const AllComments: FunctionComponent = () => {
       </Grid>
       <Box display="flex" flexDirection="column" alignItems="center" mt={6}>
         <Button variant="contained" color="secondary">
-          Get Comments
+          Get Replies
         </Button>
       </Box>
     </Box>
   );
 };
 
-export default AllComments;
+export default AllReplies;
