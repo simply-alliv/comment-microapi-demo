@@ -8,7 +8,7 @@ import VoteReply from "./VoteReply";
 import FlagReply from "./FlagReply";
 import StateFooter from "../StateFooter";
 
-const tabLabels: string[] = [
+export const tabLabels: string[] = [
   "Reply Create",
   "Reply Get",
   "Reply Update",
@@ -17,7 +17,7 @@ const tabLabels: string[] = [
   "Reply Flag",
 ];
 
-const tabViews: ReactElement[] = [
+export const tabViews: ReactElement[] = [
   <CreateReply />,
   <GetReply />,
   <UpdateReply />,
@@ -26,12 +26,17 @@ const tabViews: ReactElement[] = [
   <FlagReply />,
 ];
 
-const Replies: FunctionComponent = () => {
+type RepliesProps = {
+  tabValueState: [any, React.Dispatch<React.SetStateAction<any>>];
+};
+
+const Replies: FunctionComponent<RepliesProps> = ({ tabValueState }) => {
   return (
     <React.Fragment>
       <TabViewsContainer
         tabLabels={tabLabels}
         tabViews={tabViews}
+        tabValueState={tabValueState}
       ></TabViewsContainer>
       <StateFooter />
     </React.Fragment>

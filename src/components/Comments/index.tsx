@@ -8,7 +8,7 @@ import VoteComment from "./VoteComment";
 import FlagComment from "./FlagComment";
 import StateFooter from "../StateFooter";
 
-const tabLabels: string[] = [
+export const tabLabels: string[] = [
   "Comment Create",
   "Comment Get",
   "Comment Update",
@@ -17,7 +17,7 @@ const tabLabels: string[] = [
   "Comment Flag",
 ];
 
-const tabViews: ReactElement[] = [
+export const tabViews: ReactElement[] = [
   <CreateComment />,
   <GetComment />,
   <UpdateComment />,
@@ -26,12 +26,17 @@ const tabViews: ReactElement[] = [
   <FlagComment />,
 ];
 
-const Comments: FunctionComponent = () => {
+type CommentsProps = {
+  tabValueState: [any, React.Dispatch<React.SetStateAction<any>>];
+};
+
+const Comments: FunctionComponent<CommentsProps> = ({ tabValueState }) => {
   return (
     <React.Fragment>
       <TabViewsContainer
         tabLabels={tabLabels}
         tabViews={tabViews}
+        tabValueState={tabValueState}
       ></TabViewsContainer>
       <StateFooter />
     </React.Fragment>
