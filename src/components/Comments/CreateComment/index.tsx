@@ -26,7 +26,7 @@ const CreateComment: FunctionComponent = () => {
       <Box display="flex" flexDirection="column" mt={1}>
         <TextareaAutosize rowsMin={5} rowsMax={5}></TextareaAutosize>
       </Box>
-      <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
+      <Box display="flex" flexDirection="column" alignItems="center" mt={4}>
         <Button variant="contained" color="secondary">
           Comment
         </Button>
