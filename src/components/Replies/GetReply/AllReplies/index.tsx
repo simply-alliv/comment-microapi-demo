@@ -36,7 +36,7 @@ const AllReplies: FunctionComponent = () => {
       </Box>
       <Grid container spacing={2}>
         {filters.map((filter) => (
-          <Grid className={classes.root} item xs={6} sm={3} key={filter}>
+          <Grid className={classes.root} item xs={6} key={filter}>
             <Button
               variant={selectedFilters === filter ? "contained" : "outlined"}
               onClick={() =>
