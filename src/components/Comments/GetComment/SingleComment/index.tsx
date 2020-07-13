@@ -8,7 +8,7 @@ const getSingleCommentSubtitle = "Need to get just one comment?";
 
 const comments = ["Comment 1", "Comment 2", "Comment 3", "Comment 4"];
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: "grid",
   },
