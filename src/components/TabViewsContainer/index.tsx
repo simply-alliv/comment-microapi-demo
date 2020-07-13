@@ -39,7 +39,7 @@ const TabViewsContainer: FunctionComponent<TabViewsContainerProps> = ({
 
   return (
     <div className={classes.root}>
-      <AppBar position="static" elevation={0}>
+      <AppBar position="static" elevation={1}>
         <Tabs
           value={value}
           onChange={handleChange}
