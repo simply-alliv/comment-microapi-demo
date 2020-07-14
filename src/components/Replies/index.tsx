@@ -1,5 +1,5 @@
 import React, { FunctionComponent, ReactElement } from "react";
-import TabViewsContainer from "../TabViewsContainer";
+import TabPanel from "../TabPanel";
 import CreateReply from "./CreateReply";
 import GetReply from "./GetReply";
 import UpdateReply from "./UpdateReply";
@@ -33,11 +33,13 @@ type RepliesProps = {
 const Replies: FunctionComponent<RepliesProps> = ({ tabValueState }) => {
   return (
     <React.Fragment>
-      <TabViewsContainer
-        tabLabels={tabLabels}
-        tabViews={tabViews}
-        tabValueState={tabValueState}
-      ></TabViewsContainer>
+      {tabViews.map((element, index) => {
+        return (
+          <TabPanel tabIndex={index} activeTabIndex={tabValueState[0]}>
+            {element}
+          </TabPanel>
+        );
+      })}
       <StateFooter />
     </React.Fragment>
   );

@@ -4,26 +4,26 @@ import Container from "@material-ui/core/Container";
 
 type TabPanelProps = {
   children: any;
-  index: number;
-  value: number;
+  tabIndex: number;
+  activeTabIndex: number;
   other?: any;
 };
 
 const TabPanel: FunctionComponent<TabPanelProps> = ({
   children,
-  index,
-  value,
+  tabIndex,
+  activeTabIndex,
   other,
 }) => {
   return (
     <div
       role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
+      hidden={tabIndex !== activeTabIndex}
+      id={`simple-tabpanel-${tabIndex}`}
+      aria-labelledby={`simple-tab-${tabIndex}`}
       {...other}
     >
-      {value === index && (
+      {tabIndex === activeTabIndex && (
         <Box p={2}>
           <Container maxWidth="sm">{children}</Container>
         </Box>
