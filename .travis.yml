@@ -1,0 +1,17 @@
+language: node_js
+node_js:
+- '12'
+cache:
+  directories:
+  - node_modules
+script:
+- npm test:ci
+- npm run build:ci
+deploy:
+  provider: pages
+  skip_cleanup: true
+  local_dir: build
+  on:
+    branch: develop
+  github_token:
+    secure: AIzu+h04LDD7N9RXWp7YJukjdeTbqgq+4rc0Auzd7xw3TBGByuDQ2AdDDreaEyyIYD1EM2pHshg0becptGKbsyqqHJir+cBozl83+9C1TFjaX1EqfjZWruI84YINWCfGO0L/mTUYpdGU28slZbHVi18Nd5BDEPZHQqNkKTW9nJKI4KLOj4tW6JGNZKhR1nWRqaxi5jyedMGthmcogC6b3GFFDPu5Du08KWN3vx29GO6etm3wSHlBY7TwcIwYaULDpvp8aMG1bnoXG+Hn/u6klMybBo+cc8n3Gah2do6l709d5Ja9MWxc+Y26+L2rYyfkN+f5IgRMhYPHrjG2sVYmJTqqxgNKQgtQIAVotpMEa7aYxf1z1P3DpK9oKpynH/HbqG3RFWPWQhczxHgx1dj9UqTdQcM5alcXIqce+3PX/Y25Nqa8a/lDJ7zj3mxagPQK8+pHzya8BK2JsCBJrVr77xMH6113ot+cgVlPrSodf3C1Pb4bjMquNo3LeFA079xRLHhvqGHHgKINvH4JkmehEoSOWAvGGhJpw3svDU7G8nVBU5yW/YBM0iCKMq1SiDViyyigaPitr/1Q8inWPnK1J0sy6tU1oI2rE4PUeg1kyIKkH0vg2IPLA0KhH/xSpFwXcida0I5Vr1mPnvckvJM4CAVPfDTDM2fK2aqUGx9fHMw=
