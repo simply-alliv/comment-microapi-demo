@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { ThemeProvider } from "@material-ui/core/styles";
+import { Switch, Route } from "react-router-dom";
+import { ThemeProvider, makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Home from "../Home/index";
 import CustomAppBar from "./CustomAppBar";
@@ -8,32 +8,37 @@ import CustomTabBar from "./CustomTabBar";
 import Comments, { tabLabels as commentsTabLabels } from "../Comments/index";
 import Replies, { tabLabels as repliesTabLabels } from "../Replies/index";
 import theme from "../../theme";
+import useCurrentRoute from "../../hooks/useCurrentRoute";
+import { RoutePath } from "../../common/enums";
 
-export enum Routes {
-  Home = "/",
-  Comments = "/comments",
-  Replies = "/replies",
-}
+const useStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: theme.palette.background.paper,
+  },
+}));
 
 function App() {
-  const [currentPage, setCurrentPage] = useState(Routes.Home);
-  const [commentsTabsValue, setCommentsTabsValue] = React.useState(0);
-  const [repliesTabsValue, setRepliesTabsValue] = React.useState(0);
+  const [commentsTabsValue, setCommentsTabsValue] = useState(0);
+  const [repliesTabsValue, setRepliesTabsValue] = useState(0);
+
+  const classes = useStyles();
+  const currentRoute = useCurrentRoute();
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
-        <CustomAppBar currentPageState={[currentPage, setCurrentPage]}>
-          {currentPage === Routes.Comments || currentPage === Routes.Replies ? (
+      <div className={classes.root}>
+        <CustomAppBar currentRoute={currentRoute}>
+          {currentRoute.path === RoutePath.Comments ||
+          currentRoute.path === RoutePath.Replies ? (
             <CustomTabBar
               tabLabels={
-                currentPage === Routes.Comments
+                currentRoute.path === RoutePath.Comments
                   ? commentsTabLabels
                   : repliesTabLabels
               }
               tabValueState={
-                currentPage === Routes.Comments
+                currentRoute.path === RoutePath.Comments
                   ? [commentsTabsValue, setCommentsTabsValue]
                   : [repliesTabsValue, setRepliesTabsValue]
               }
@@ -43,19 +48,19 @@ function App() {
           )}
         </CustomAppBar>
         <Switch>
-          <Route exact path={Routes.Home}>
-            <Home currentPageState={[currentPage, setCurrentPage]} />
+          <Route exact path={RoutePath.Home}>
+            <Home />
           </Route>
-          <Route path={Routes.Comments}>
+          <Route path={RoutePath.Comments}>
             <Comments
               tabValueState={[commentsTabsValue, setCommentsTabsValue]}
             />
           </Route>
-          <Route path={Routes.Replies}>
+          <Route path={RoutePath.Replies}>
             <Replies tabValueState={[repliesTabsValue, setRepliesTabsValue]} />
           </Route>
         </Switch>
-      </Router>
+      </div>
     </ThemeProvider>
   );
 }

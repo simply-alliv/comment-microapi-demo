@@ -8,7 +8,7 @@ import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import Comment, { CommentProps } from "../Comment";
 import { ReplyProps } from "../Comment/Reply";
-import { Routes } from "../App";
+import { RoutePath } from "../../common/enums";
 
 const replies: ReplyProps[] = [
   {
@@ -35,11 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type HomeProps = {
-  currentPageState: [any, React.Dispatch<React.SetStateAction<any>>];
-};
-
-const Home: FunctionComponent<HomeProps> = ({ currentPageState }) => {
+const Home: FunctionComponent = () => {
   const classes = useStyles();
 
   return (
@@ -65,12 +61,8 @@ const Home: FunctionComponent<HomeProps> = ({ currentPageState }) => {
           />
         </Box>
         <Box pb={2} display="flex" justifyContent="center">
-          <Link component={RouterLink} to={Routes.Comments}>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => currentPageState[1](Routes.Comments)}
-            >
+          <Link component={RouterLink} to={RoutePath.Comments}>
+            <Button variant="contained" color="secondary">
               Live Demo
             </Button>
           </Link>

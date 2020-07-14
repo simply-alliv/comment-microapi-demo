@@ -1,5 +1,5 @@
 import React, { FunctionComponent, ReactElement } from "react";
-import TabViewsContainer from "../TabViewsContainer";
+import TabPanel from "../TabPanel";
 import CreateComment from "./CreateComment";
 import GetComment from "./GetComment";
 import UpdateComment from "./UpdateComment";
@@ -33,11 +33,13 @@ type CommentsProps = {
 const Comments: FunctionComponent<CommentsProps> = ({ tabValueState }) => {
   return (
     <React.Fragment>
-      <TabViewsContainer
-        tabLabels={tabLabels}
-        tabViews={tabViews}
-        tabValueState={tabValueState}
-      ></TabViewsContainer>
+      {tabViews.map((element, index) => {
+        return (
+          <TabPanel tabIndex={index} activeTabIndex={tabValueState[0]}>
+            {element}
+          </TabPanel>
+        );
+      })}
       <StateFooter />
     </React.Fragment>
   );
