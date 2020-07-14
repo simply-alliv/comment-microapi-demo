@@ -2,6 +2,7 @@ import { useLocation } from "react-router-dom";
 import { RoutePath } from "../../common/enums";
 import { Route } from "../../common/models";
 
+// Hook to keep track of the current route path.
 const useCurrentRoute = () => {
   const location = useLocation();
 
