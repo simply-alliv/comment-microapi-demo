@@ -48,5 +48,6 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/microapidev/comment-microapi-demo.git"
-  }
+  },
+  "homepage": "https://microapidev.github.io/comment-microapi-demo/"
 }
