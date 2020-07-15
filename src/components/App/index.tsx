@@ -9,6 +9,7 @@ import Comments, { tabLabels as commentsTabLabels } from "../Comments/index";
 import Replies, { tabLabels as repliesTabLabels } from "../Replies/index";
 import theme from "../../theme";
 import useCurrentRoute from "../../hooks/useCurrentRoute";
+import { CommentsContextProvider } from "../../context/comments";
 import { RoutePath } from "../../common/enums";
 
 const useStyles = makeStyles((theme) => ({
@@ -47,19 +48,23 @@ function App() {
             <React.Fragment></React.Fragment>
           )}
         </CustomAppBar>
-        <Switch>
-          <Route exact path={RoutePath.Home}>
-            <Home />
-          </Route>
-          <Route path={RoutePath.Comments}>
-            <Comments
-              tabValueState={[commentsTabsValue, setCommentsTabsValue]}
-            />
-          </Route>
-          <Route path={RoutePath.Replies}>
-            <Replies tabValueState={[repliesTabsValue, setRepliesTabsValue]} />
-          </Route>
-        </Switch>
+        <CommentsContextProvider>
+          <Switch>
+            <Route exact path={RoutePath.Home}>
+              <Home />
+            </Route>
+            <Route path={RoutePath.Comments}>
+              <Comments
+                tabValueState={[commentsTabsValue, setCommentsTabsValue]}
+              />
+            </Route>
+            <Route path={RoutePath.Replies}>
+              <Replies
+                tabValueState={[repliesTabsValue, setRepliesTabsValue]}
+              />
+            </Route>
+          </Switch>
+        </CommentsContextProvider>
       </div>
     </ThemeProvider>
   );
