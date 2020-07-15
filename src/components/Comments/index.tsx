@@ -27,7 +27,7 @@ export const tabViews: ReactElement[] = [
 ];
 
 type CommentsProps = {
-  tabValueState: [any, React.Dispatch<React.SetStateAction<any>>];
+  tabValueState: [number, React.Dispatch<React.SetStateAction<number>>];
 };
 
 const Comments: FunctionComponent<CommentsProps> = ({ tabValueState }) => {
