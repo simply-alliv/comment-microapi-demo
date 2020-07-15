@@ -1,3 +1,5 @@
+import Comment from "./comment";
+import Reply from "./reply";
 import Route from "./route";
 
-export { Route };
+export { Comment, Reply, Route };

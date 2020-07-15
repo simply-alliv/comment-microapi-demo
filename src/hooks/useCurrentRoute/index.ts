@@ -7,17 +7,15 @@ const useCurrentRoute = () => {
   const location = useLocation();
 
   switch (location.pathname) {
-    case RoutePath.Home:
-      return new Route(RoutePath.Home);
-
     case RoutePath.Comments:
       return new Route(RoutePath.Comments);
 
     case RoutePath.Replies:
       return new Route(RoutePath.Replies);
 
+    case RoutePath.Home:
     default:
-      throw new Error(`Route ${location.pathname} is not implemented.`);
+      return new Route(RoutePath.Home);
   }
 };
 

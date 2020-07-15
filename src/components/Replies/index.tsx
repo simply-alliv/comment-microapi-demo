@@ -35,7 +35,11 @@ const Replies: FunctionComponent<RepliesProps> = ({ tabValueState }) => {
     <React.Fragment>
       {tabViews.map((element, index) => {
         return (
-          <TabPanel tabIndex={index} activeTabIndex={tabValueState[0]}>
+          <TabPanel
+            key={tabLabels[index]}
+            tabIndex={index}
+            activeTabIndex={tabValueState[0]}
+          >
             {element}
           </TabPanel>
         );
