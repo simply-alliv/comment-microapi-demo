@@ -9,15 +9,6 @@ import FlagReply from "./FlagReply";
 import StateFooter from "../StateFooter";
 import mockCommentProps from "../../context/comments/mock-comment-props";
 
-export const tabLabels: string[] = [
-  "Reply Create",
-  "Reply Get",
-  "Reply Update",
-  "Reply Delete",
-  "Reply Vote",
-  "Reply Flag",
-];
-
 export const tabViews: ReactElement[] = [
   <CreateReply />,
   <GetReply />,
@@ -28,7 +19,7 @@ export const tabViews: ReactElement[] = [
 ];
 
 type RepliesProps = {
-  tabValueState: [any, React.Dispatch<React.SetStateAction<any>>];
+  tabValueState: [number, React.Dispatch<React.SetStateAction<number>>];
 };
 
 const Replies: FunctionComponent<RepliesProps> = ({ tabValueState }) => {
@@ -37,7 +28,7 @@ const Replies: FunctionComponent<RepliesProps> = ({ tabValueState }) => {
       {tabViews.map((element, index) => {
         return (
           <TabPanel
-            key={tabLabels[index]}
+            key={index}
             tabIndex={index}
             activeTabIndex={tabValueState[0]}
           >
