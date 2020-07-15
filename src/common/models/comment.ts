@@ -2,15 +2,15 @@
 class Comment {
   constructor(
     public commentId: string,
-    public refId: string,
     public ownerId: string,
     public content: string,
-    public origin: string,
     public numOfVotes: number,
     public numOfUpVotes: number,
     public numOfDownVotes: number,
     public numOfFlags: number,
-    public numOfReplies: number
+    public numOfReplies: number,
+    public refId?: string,
+    public origin?: string
   ) {}
 }
 
