@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import { ThemeProvider, makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Home from "../Home/index";
@@ -40,6 +40,9 @@ function App() {
         </CustomAppBar>
         <CommentsContextProvider>
           <Switch>
+            <Route exact path="/">
+              <Redirect to={RoutePath.Home} />
+            </Route>
             <Route exact path={RoutePath.Home}>
               <Home />
             </Route>
