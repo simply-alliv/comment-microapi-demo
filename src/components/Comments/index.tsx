@@ -7,6 +7,7 @@ import DeleteComment from "./DeleteComment";
 import VoteComment from "./VoteComment";
 import FlagComment from "./FlagComment";
 import StateFooter from "../StateFooter";
+import mockCommentProps from "../../context/comments/mock-comment-props"
 
 export const tabLabels: string[] = [
   "Comment Create",
@@ -44,7 +45,7 @@ const Comments: FunctionComponent<CommentsProps> = ({ tabValueState }) => {
           </TabPanel>
         );
       })}
-      <StateFooter />
+      <StateFooter comments={mockCommentProps} />
     </React.Fragment>
   );
 };
