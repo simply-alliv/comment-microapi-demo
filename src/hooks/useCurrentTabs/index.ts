@@ -1,4 +1,3 @@
-import useCurrentRoute from "../useCurrentRoute";
 import { RoutePath } from "../../common/enums";
 import { Route } from "../../common/models";
 
