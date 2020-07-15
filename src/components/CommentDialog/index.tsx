@@ -1,4 +1,5 @@
 import React, { FunctionComponent } from "react";
+import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -38,16 +39,6 @@ const CommentDialog: FunctionComponent<ScrollDialogProps> = ({
   handleClose,
 }) => {
 
-  const descriptionElementRef = React.useRef<HTMLInputElement>(null);
-  React.useEffect(() => {
-    if (isOpen) {
-      const { current: descriptionElement } = descriptionElementRef;
-      if (descriptionElement !== null) {
-        descriptionElement.focus();
-      }
-    }
-  }, [isOpen]);
-
   return (
     <div>
       <Dialog
@@ -59,24 +50,29 @@ const CommentDialog: FunctionComponent<ScrollDialogProps> = ({
       >
         <DialogTitle id="scroll-dialog-title">Current State</DialogTitle>
         <DialogContent>
-          <DialogContentText>The curent saved state of your comments.</DialogContentText>
+          <DialogContentText>
+            The curent saved state of your comments.
+          </DialogContentText>
         </DialogContent>
         <DialogContent dividers>
           <DialogContentText
             id="scroll-dialog-description"
-            ref={descriptionElementRef}
             tabIndex={-1}
           >
-            {comments.map(item => <Comment {...item} />)}
+            {comments.map((item, index) => (
+              <Comment key={index} {...item} />
+            ))}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>
-            Reset state
-          </Button>
-          <Button onClick={handleClose}>
-            Let me continue
-          </Button>
+          <Box display="flex" flexDirection="column">
+            <Button color="secondary" onClick={handleClose}>
+              Reset state
+            </Button>
+            <Button color="secondary" onClick={handleClose}>
+              Let me continue
+            </Button>
+          </Box>
         </DialogActions>
       </Dialog>
     </div>

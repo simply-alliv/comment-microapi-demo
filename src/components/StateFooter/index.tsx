@@ -21,11 +21,15 @@ const StateFooter = () => {
   const handleClose = () => setOpen(false);
 
   return (
-    <Box display="flex" justifyContent="space-between" p={2}>
-      <Button onClick={handleViewState}>View Current State</Button>
-      <Button onClick={handleResetState}>Reset State</Button>
-      <CommentDialog isOpen={open} handleClose={handleClose} />
-    </Box>
+    <React.Fragment>
+      <Box display="flex" justifyContent="space-between" p={2}>
+        <Button onClick={handleViewState}>View Current State</Button>
+        <Button onClick={handleResetState}>Reset State</Button>
+      </Box>
+      <Box>
+        <CommentDialog isOpen={open} handleClose={handleClose} />
+      </Box>
+    </React.Fragment>
   );
 };
 
