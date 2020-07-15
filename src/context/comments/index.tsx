@@ -41,7 +41,7 @@ const reducer = (state: State, action: any) => {
 
     case CommentsActionType.RESET_STATE:
       console.log("Reset State");
-      return state;
+      return initialState;
 
     default:
       throw new Error();
