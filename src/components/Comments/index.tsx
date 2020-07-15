@@ -8,15 +8,6 @@ import VoteComment from "./VoteComment";
 import FlagComment from "./FlagComment";
 import StateFooter from "../StateFooter";
 
-export const tabLabels: string[] = [
-  "Comment Create",
-  "Comment Get",
-  "Comment Update",
-  "Comment Delete",
-  "Comment Vote",
-  "Comment Flag",
-];
-
 export const tabViews: ReactElement[] = [
   <CreateComment />,
   <GetComment />,
@@ -36,7 +27,7 @@ const Comments: FunctionComponent<CommentsProps> = ({ tabValueState }) => {
       {tabViews.map((element, index) => {
         return (
           <TabPanel
-            key={tabLabels[index]}
+            key={index}
             tabIndex={index}
             activeTabIndex={tabValueState[0]}
           >

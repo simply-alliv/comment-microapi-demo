@@ -8,15 +8,6 @@ import VoteReply from "./VoteReply";
 import FlagReply from "./FlagReply";
 import StateFooter from "../StateFooter";
 
-export const tabLabels: string[] = [
-  "Reply Create",
-  "Reply Get",
-  "Reply Update",
-  "Reply Delete",
-  "Reply Vote",
-  "Reply Flag",
-];
-
 export const tabViews: ReactElement[] = [
   <CreateReply />,
   <GetReply />,
@@ -36,7 +27,7 @@ const Replies: FunctionComponent<RepliesProps> = ({ tabValueState }) => {
       {tabViews.map((element, index) => {
         return (
           <TabPanel
-            key={tabLabels[index]}
+            key={index}
             tabIndex={index}
             activeTabIndex={tabValueState[0]}
           >
