@@ -7,6 +7,8 @@ const useCurrentRoute = () => {
   const location = useLocation();
 
   switch (location.pathname) {
+    // Route path from Github pages.
+    case "/comment-microapi-demo":
     case RoutePath.Home:
       return new Route(RoutePath.Home);
 

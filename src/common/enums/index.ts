@@ -1,3 +1,4 @@
+import CommentsActionType from "./comments-action-type";
 import RoutePath from "./route-path";
 
-export { RoutePath };
+export { CommentsActionType, RoutePath };
