@@ -1,33 +1,24 @@
 import React, { useContext } from "react";
 import { Box, Button } from "@material-ui/core";
-<<<<<<< HEAD
-import CommentDialog from "../CommentDialog";
-
-const StateFooter = () => {
-  const [open, setOpen] = React.useState(false);
-
-  const handleViewState = () => setOpen(true);
-
-  const handleResetState = () => {};
-
-  const handleClose = () => setOpen(false);
-=======
 import { CommentsContext } from "../../context/comments";
-import { CommentsActionType } from "../../common/enums";
+import CommentDialog from "../CommentDialog";
+import CommentsActionType from "../../common/enums/comments-action-type";
 
 const StateFooter = () => {
   const [state, dispatch] = useContext(CommentsContext);
+  const [open, setOpen] = React.useState(false);
 
   console.log(state);
 
-  const handleViewState = (event: any) => {};
+  const handleViewState = () => setOpen(true);
 
   const handleResetState = (event: any) => {
     dispatch({
       type: CommentsActionType.RESET_STATE,
     });
   };
->>>>>>> upstream/develop
+
+  const handleClose = () => setOpen(false);
 
   return (
     <Box display="flex" justifyContent="space-between" p={2}>
