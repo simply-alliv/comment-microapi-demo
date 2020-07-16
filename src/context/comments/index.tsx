@@ -1,71 +1,67 @@
-import React, { FunctionComponent, createContext, useReducer } from "react";
+import React, {
+  FunctionComponent,
+  createContext,
+  useReducer,
+  useEffect,
+} from "react";
+import dispatchMiddleware from "./middleware";
 import { Comment, Reply } from "../../common/models";
-import { CommentsActionType } from "../../common/enums";
+import { CommentsActionType, CommentsResultType } from "../../common/enums";
 import { mockComments } from "./mock";
 
 // State
 interface State {
   comments: Comment[];
   replies: Reply[];
+  loading: boolean;
 }
 
 const initialState: State = {
   comments: mockComments,
   replies: [],
+  loading: false,
 };
 
 // Creat Context Object
 export const CommentsContext = createContext<
-  [State, React.Dispatch<{ type: CommentsActionType }>]
+  [State, React.Dispatch<{ type: CommentsActionType; payload?: any }>]
 >([initialState, () => null]);
 
 const reducer = (state: State, action: any) => {
   switch (action.type) {
     // Comments reducers
-    case CommentsActionType.CREATE_COMMENT:
-      console.log("Create Comment");
-      return state;
+    case CommentsResultType.NEW_COMMENT: {
+      state.comments.push(action.payload);
 
-    case CommentsActionType.UPDATE_COMMENT:
-      console.log("Update Comment");
-      return state;
+      const updatedState = {
+        ...state,
+        loading: false,
+      };
 
-    case CommentsActionType.FLAG_COMMENT:
-      console.log("Flag Comment");
-      return state;
+      return updatedState;
+    }
 
-    case CommentsActionType.VOTE_COMMENT:
-      console.log("Vote Comment");
-      return state;
+    case CommentsResultType.NEW_COMMENTS: {
+      action.payload.forEach((comment: any) => {
+        state.comments.push(comment);
+      });
 
-    case CommentsActionType.DELETE_COMMENT:
-      console.log("Delete Comment");
-      return state;
+      const updatedState = {
+        ...state,
+        loading: false,
+      };
 
-    case CommentsActionType.RESET_STATE:
-      console.log("Reset State");
-      return initialState;
+      return updatedState;
+    }
 
-    // Replies reducers
-    case CommentsActionType.CREATE_REPLY:
-      console.log("Create Reply");
-      return state;
+    case CommentsResultType.SET_LOADING: {
+      const updatedState = {
+        ...state,
+        loading: true,
+      };
 
-    case CommentsActionType.UPDATE_REPLY:
-      console.log("Update Reply");
-      return state;
-
-    case CommentsActionType.FLAG_REPLY:
-      console.log("Flag Reply");
-      return state;
-
-    case CommentsActionType.VOTE_REPLY:
-      console.log("Vote Reply");
-      return state;
-
-    case CommentsActionType.DELETE_REPLY:
-      console.log("Delete Reply");
-      return state;
+      return updatedState;
+    }
 
     default:
       throw new Error();
@@ -81,8 +77,12 @@ export const CommentsContextProvider: FunctionComponent<CommentsContextProviderP
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  useEffect(() => {
+    // if ()
+  });
+
   return (
-    <CommentsContext.Provider value={[state, dispatch]}>
+    <CommentsContext.Provider value={[state, dispatchMiddleware(dispatch)]}>
       {children}
     </CommentsContext.Provider>
   );

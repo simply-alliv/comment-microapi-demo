@@ -1,6 +1,7 @@
 // Direct representation of the Comment abject from the Comment API
 class Comment {
   constructor(
+    public applicationId: string,
     public commentId: string,
     public ownerId: string,
     public content: string,
@@ -9,8 +10,8 @@ class Comment {
     public numOfDownVotes: number,
     public numOfFlags: number,
     public numOfReplies: number,
-    public refId?: string,
-    public origin?: string
+    public createdAt: string,
+    public updatedAt: string
   ) {}
 }
 
