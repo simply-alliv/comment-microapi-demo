@@ -16,6 +16,17 @@ const CreateComment: FunctionComponent = () => {
   const [state, dispatch] = useContext(CommentsContext);
   let content = "";
 
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    content = event.target.value;
+  };
+
+  const handleCreateCommentClick = () => {
+    dispatch({
+      type: CommentsActionType.CREATE_COMMENT,
+      payload: { content },
+    });
+  };
+
   return (
     <React.Fragment>
       <TabViewIntroSection
@@ -32,27 +43,17 @@ const CreateComment: FunctionComponent = () => {
         <TextareaAutosize
           rowsMin={5}
           rowsMax={5}
-          onChange={(event: any) => {
-            console.log(event.target.value);
-            content = event.target.value;
-          }}
+          onChange={handleChange}
         ></TextareaAutosize>
       </Box>
       <Box display="flex" flexDirection="column" alignItems="center" mt={4}>
         <Button
           variant="contained"
           color="secondary"
-          onClick={() =>
-            dispatch({
-              type: CommentsActionType.CREATE_COMMENT,
-              payload: {
-                userId: "you@gmail.com",
-                content,
-              },
-            })
-          }
+          disabled={state.loading}
+          onClick={handleCreateCommentClick}
         >
-          {state.loading ? "Loading..." : "Create Comment"}
+          {state.loading ? "Please Wait..." : "Create Comment"}
         </Button>
       </Box>
     </React.Fragment>

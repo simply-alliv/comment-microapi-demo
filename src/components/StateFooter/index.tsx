@@ -4,9 +4,11 @@ import { CommentsContext } from "../../context/comments";
 import { CommentsActionType } from "../../common/enums";
 
 const StateFooter = () => {
-  const dispatch = useContext(CommentsContext)[1];
+  const [state, dispatch] = useContext(CommentsContext);
 
-  const handleViewState = (event: any) => {};
+  const handleViewState = (event: any) => {
+    console.log(state);
+  };
 
   const handleResetState = (event: any) => {
     dispatch({
