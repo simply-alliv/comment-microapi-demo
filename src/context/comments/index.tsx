@@ -10,7 +10,7 @@ import { CommentsActionType, CommentsResultType } from "../../common/enums";
 import { mockComments } from "./mock";
 
 // State
-interface State {
+export interface State {
   comments: Comment[];
   replies: Reply[];
   loading: boolean;
@@ -29,7 +29,7 @@ export const CommentsContext = createContext<
 
 const reducer = (state: State, action: any) => {
   // The reducer can be called twice for the same dispatch so a check to see
-  // if the comment has been added already is required.
+  // if the comment or reply has been added already is required.
   //
   // Proper fix needed.
   //
@@ -40,6 +40,16 @@ const reducer = (state: State, action: any) => {
     );
 
     return existingComment ? true : false;
+  };
+
+  const replyExists = (commentId: string, replyId: string): boolean => {
+    let existingReply = undefined;
+
+    if (!commentExists(commentId)) {
+      existingReply = state.replies.find((reply) => reply.replyId === replyId);
+    }
+
+    return existingReply ? true : false;
   };
 
   // The switch block for the reducer actions.
@@ -74,12 +84,13 @@ const reducer = (state: State, action: any) => {
     }
 
     case CommentsResultType.UPDATE_COMMENT: {
-      if (!commentExists(action.payload.commentId)) {
-        const commentIndex = state.comments.indexOf(action.payload);
-
-        if (commentIndex !== -1) {
-          state.comments.splice(commentIndex, 1, action.payload);
-        }
+      const updatedComment = action.payload;
+      if (commentExists(updatedComment.commentId)) {
+        state.comments.forEach((comment, index) => {
+          if (comment.commentId === updatedComment.commentId) {
+            state.comments.splice(index, 1, updatedComment);
+          }
+        });
       }
 
       const updatedState = {
@@ -95,6 +106,72 @@ const reducer = (state: State, action: any) => {
         state.comments.filter(
           (comment) => comment.commentId !== action.payload.commentId
         );
+      }
+
+      const updatedState = {
+        ...state,
+        loading: false,
+      };
+
+      return updatedState;
+    }
+
+    // Replies reducers
+    case CommentsResultType.ADD_REPLY: {
+      const { commentId, reply } = action.payload;
+      if (!replyExists(commentId, reply.replyId)) {
+        state.replies.push(reply);
+      }
+
+      const updatedState = {
+        ...state,
+        loading: false,
+      };
+
+      return updatedState;
+    }
+
+    case CommentsResultType.ADD_REPLIES: {
+      const { commentId, replies } = action.payload;
+
+      replies.forEach((reply: Reply) => {
+        if (!replyExists(commentId, reply.replyId)) {
+          state.replies.push(reply);
+        }
+      });
+
+      const updatedState = {
+        ...state,
+        loading: false,
+      };
+
+      return updatedState;
+    }
+
+    case CommentsResultType.UPDATE_REPLY: {
+      const { commentId, updatedReply } = action.payload;
+
+      if (replyExists(commentId, updatedReply.replyId)) {
+        state.replies.forEach((reply, index) => {
+          if (reply.replyId === updatedReply.replyId) {
+            state.replies.splice(index, 1, updatedReply);
+          }
+        });
+      }
+
+      const updatedState = {
+        ...state,
+        loading: false,
+      };
+
+      return updatedState;
+    }
+
+    case CommentsResultType.REMOVE_REPLY: {
+      const { commentId, replyId } = action.payload;
+
+      if (!replyExists(commentId, replyId)) {
+        state.replies.filter((reply) => reply.replyId !== replyId);
       }
 
       const updatedState = {

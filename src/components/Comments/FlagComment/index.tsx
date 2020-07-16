@@ -1,36 +1,30 @@
 import React, { FunctionComponent, useState, useContext } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
-import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 
 import TabViewIntroSection from "../../TabViewIntroSection";
+import CommentSelect from "../../CommentSelect";
 import { CommentsContext } from "../../../context/comments";
+import { Comment } from "../../../common/models";
 import { CommentsActionType } from "../../../common/enums";
 
 const flagComponentEndpoints = ["PATCH /comments/:commentId/flag"];
 const flagComponentHeading = "Flag a comment";
 const flagComponentSubtitle = "Didn’t like a comment? Do something about it.";
 
-const useStyles = makeStyles({
-  root: {
-    display: "grid",
-  },
-});
-
 const FlagComment: FunctionComponent = () => {
   const [state, dispatch] = useContext(CommentsContext);
-  const [selectedCommentId, setSelectedCommentId] = useState(
-    state.comments[0].commentId
-  );
+  const [selectedComment, setSelectedComment] = useState(state.comments[0]);
 
-  const classes = useStyles();
+  const handleSelectedCommentChange = (comment: Comment) => {
+    setSelectedComment(comment);
+  };
 
   const handleFlagSingleCommentClick = () => {
     dispatch({
       type: CommentsActionType.FLAG_COMMENT,
-      payload: { commentId: selectedCommentId },
+      payload: { commentId: selectedComment.commentId },
     });
   };
 
@@ -46,28 +40,12 @@ const FlagComment: FunctionComponent = () => {
           Select a comment you'd like to flag.
         </Typography>
       </Box>
-      <Grid container spacing={2}>
-        {state.comments.slice(0, 4).map((comment) => (
-          <Grid
-            className={classes.root}
-            item
-            xs={6}
-            sm={3}
-            key={comment.commentId}
-          >
-            <Button
-              variant={
-                selectedCommentId === comment.commentId
-                  ? "contained"
-                  : "outlined"
-              }
-              onClick={() => setSelectedCommentId(comment.commentId)}
-            >
-              {comment.commentId.slice(0, 7)}
-            </Button>
-          </Grid>
-        ))}
-      </Grid>
+      <Box mb={1} display="flex" justifyContent="center">
+        <CommentSelect
+          state={state}
+          onChange={handleSelectedCommentChange}
+        ></CommentSelect>
+      </Box>
       <Box display="flex" flexDirection="column" alignItems="center" mt={4}>
         <Button
           variant="contained"

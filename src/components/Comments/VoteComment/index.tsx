@@ -6,7 +6,9 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
 import TabViewIntroSection from "../../TabViewIntroSection";
+import CommentSelect from "../../CommentSelect";
 import { CommentsContext } from "../../../context/comments";
+import { Comment } from "../../../common/models";
 import { CommentsActionType } from "../../../common/enums";
 
 const voteComponentEndpoints = [
@@ -19,21 +21,23 @@ const voteComponentSubtitle =
 
 const voteTypes = ["Upvote", "Downvote"];
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(() => ({
   root: {
     width: "100%",
     display: "grid",
   },
-});
+}));
 
 const VoteComment: FunctionComponent = () => {
   const [state, dispatch] = useContext(CommentsContext);
   const [selectedVoteType, setSelectedVoteType] = useState(voteTypes[0]);
-  const [selectedCommentId, setSelectedCommentId] = useState(
-    state.comments[0].commentId
-  );
+  const [selectedComment, setSelectedComment] = useState(state.comments[0]);
 
   const classes = useStyles();
+
+  const handleSelectedCommentChange = (comment: Comment) => {
+    setSelectedComment(comment);
+  };
 
   const handleVoteSingleCommentClick = () => {
     const type =
@@ -43,7 +47,7 @@ const VoteComment: FunctionComponent = () => {
 
     dispatch({
       type,
-      payload: { commentId: selectedCommentId },
+      payload: { commentId: selectedComment.commentId },
     });
   };
 
@@ -59,28 +63,12 @@ const VoteComment: FunctionComponent = () => {
         Select a comment that you'd like to vote on.
       </Typography>
       <Box mb={1}></Box>
-      <Grid container spacing={2}>
-        {state.comments.slice(0, 4).map((comment) => (
-          <Grid
-            className={classes.root}
-            item
-            xs={6}
-            sm={3}
-            key={comment.commentId}
-          >
-            <Button
-              variant={
-                selectedCommentId === comment.commentId
-                  ? "contained"
-                  : "outlined"
-              }
-              onClick={() => setSelectedCommentId(comment.commentId)}
-            >
-              {comment.commentId.slice(0, 7)}
-            </Button>
-          </Grid>
-        ))}
-      </Grid>
+      <Box mb={1} display="flex" justifyContent="center">
+        <CommentSelect
+          state={state}
+          onChange={handleSelectedCommentChange}
+        ></CommentSelect>
+      </Box>
       <Box mt={6}></Box>
       <Typography variant="body2" align="center" color="textSecondary">
         Select a vote type you'd like to add to a comment.

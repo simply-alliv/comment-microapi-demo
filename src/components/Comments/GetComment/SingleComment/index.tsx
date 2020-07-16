@@ -1,31 +1,27 @@
 import React, { FunctionComponent, useState, useContext } from "react";
-import { Box, Button, Grid, makeStyles, Typography } from "@material-ui/core";
+import { Box, Button, Typography } from "@material-ui/core";
 import TabViewIntroSection from "../../../TabViewIntroSection";
+import CommentSelect from "../../../CommentSelect";
 import { CommentsContext } from "../../../../context/comments";
+import { Comment } from "../../../../common/models";
 import { CommentsActionType } from "../../../../common/enums";
 
 const getSingleCommentEndpoint = ["GET /comments/commentId"];
 const getSingleCommentHeading = "GET single comments";
 const getSingleCommentSubtitle = "Need to get just one comment?";
 
-const useStyles = makeStyles(() => ({
-  root: {
-    display: "grid",
-  },
-}));
-
 const SingleComment: FunctionComponent = () => {
   const [state, dispatch] = useContext(CommentsContext);
-  const [selectedCommentId, setSelectedCommentId] = useState(
-    state.comments[0].commentId
-  );
+  const [selectedComment, setSelectedComment] = useState(state.comments[0]);
 
-  const classes = useStyles();
+  const handleSelectedCommentChange = (comment: Comment) => {
+    setSelectedComment(comment);
+  };
 
   const handleGetSingleCommentsClick = () => {
     dispatch({
       type: CommentsActionType.GET_COMMENT,
-      payload: { commentId: selectedCommentId },
+      payload: { commentId: selectedComment.commentId },
     });
   };
 
@@ -41,28 +37,12 @@ const SingleComment: FunctionComponent = () => {
           Select a comment that you'd like to get.
         </Typography>
       </Box>
-      <Grid container spacing={2}>
-        {state.comments.slice(0, 4).map((comment) => (
-          <Grid
-            className={classes.root}
-            item
-            xs={6}
-            sm={3}
-            key={comment.commentId}
-          >
-            <Button
-              variant={
-                selectedCommentId === comment.commentId
-                  ? "contained"
-                  : "outlined"
-              }
-              onClick={() => setSelectedCommentId(comment.commentId)}
-            >
-              {comment.commentId.slice(0, 7)}
-            </Button>
-          </Grid>
-        ))}
-      </Grid>
+      <Box mb={1} display="flex" justifyContent="center">
+        <CommentSelect
+          state={state}
+          onChange={handleSelectedCommentChange}
+        ></CommentSelect>
+      </Box>
       <Box display="flex" flexDirection="column" alignItems="center" mt={4}>
         <Button
           variant="contained"

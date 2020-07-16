@@ -44,7 +44,9 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
         setLoading(true, dispatch);
 
         try {
-          const comment = await commentService.getSingleComment(action.payload);
+          const comment = await commentService.getSingleComment(
+            action.payload.commentId
+          );
 
           dispatch({
             type: CommentsResultType.ADD_COMMENT,
@@ -91,7 +93,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
           const { commentId, updateCommentDTO } = action.payload;
           await commentService.updateSingleComment(commentId, updateCommentDTO);
           const updatedComment = await commentService.getSingleComment(
-            action.payload.commentId
+            commentId
           );
 
           dispatch({
@@ -113,11 +115,12 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
         setLoading(true, dispatch);
 
         try {
-          await commentService.deleteSingleComment(action.payload.commentId);
+          const { commentId } = action.payload;
+          await commentService.deleteSingleComment(commentId);
 
           dispatch({
             type: CommentsResultType.REMOVE_COMMENT,
-            payload: action.payload,
+            payload: { commentId },
           });
         } catch (error) {
           setLoading(false, dispatch);
@@ -190,6 +193,215 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
           dispatch({
             type: CommentsResultType.UPDATE_COMMENT,
             payload: updatedComment,
+          });
+        } catch (error) {
+          setLoading(false, dispatch);
+          console.log(error);
+        }
+
+        break;
+      }
+
+      /** REPLIES */
+
+      /**
+       * Get all replies dispatch middleware
+       */
+      case CommentsActionType.GET_ALL_REPLIES: {
+        setLoading(true, dispatch);
+
+        try {
+          const allReplies = await commentService.getAllReplies(action.payload);
+
+          dispatch({
+            type: CommentsResultType.ADD_REPLIES,
+            payload: {
+              commentId: action.payload.commentId,
+              replies: allReplies,
+            },
+          });
+        } catch (error) {
+          setLoading(false, dispatch);
+          console.log(error);
+        }
+
+        break;
+      }
+
+      /**
+       * Get reply dispatch middleware
+       */
+      case CommentsActionType.GET_REPLY: {
+        setLoading(true, dispatch);
+
+        try {
+          const { commentId, replyId } = action.payload;
+          const reply = await commentService.getSingleReply(commentId, replyId);
+
+          dispatch({
+            type: CommentsResultType.ADD_REPLY,
+            payload: reply,
+          });
+        } catch (error) {
+          setLoading(false, dispatch);
+          console.log(error);
+        }
+
+        break;
+      }
+
+      /**
+       * Create comment dispatch middleware
+       */
+      case CommentsActionType.CREATE_REPLY: {
+        setLoading(true, dispatch);
+
+        try {
+          const { commentId, createReplyDTO } = action.payload;
+          const reply = await commentService.createSingleReply(
+            commentId,
+            createReplyDTO
+          );
+
+          dispatch({
+            type: CommentsResultType.ADD_REPLY,
+            payload: {
+              commentId,
+              reply,
+            },
+          });
+        } catch (error) {
+          setLoading(false, dispatch);
+          console.log(error);
+        }
+
+        break;
+      }
+
+      /**
+       * Update reply dispatch middleware
+       */
+      case CommentsActionType.UPDATE_REPLY: {
+        setLoading(true, dispatch);
+
+        try {
+          const { commentId, replyId, updateReplyDTO } = action.payload;
+          await commentService.updateSingleReply(
+            commentId,
+            replyId,
+            updateReplyDTO
+          );
+          const updatedReply = await commentService.getSingleReply(
+            commentId,
+            replyId
+          );
+
+          dispatch({
+            type: CommentsResultType.UPDATE_REPLY,
+            payload: {
+              commentId,
+              updatedReply,
+            },
+          });
+        } catch (error) {
+          setLoading(false, dispatch);
+          console.log(error);
+        }
+
+        break;
+      }
+
+      /**
+       * Delete reply dispatch middleware
+       */
+      case CommentsActionType.DELETE_REPLY: {
+        setLoading(true, dispatch);
+
+        try {
+          const { commentId, replyId } = action.payload;
+          await commentService.deleteSingleReply(commentId, replyId);
+
+          dispatch({
+            type: CommentsResultType.REMOVE_REPLY,
+            payload: { commentId, replyId },
+          });
+        } catch (error) {
+          setLoading(false, dispatch);
+          console.log(error);
+        }
+
+        break;
+      }
+
+      /**
+       * Upvote reply dispatch middleware
+       */
+      case CommentsActionType.UPVOTE_REPLY: {
+        setLoading(true, dispatch);
+
+        try {
+          const { commentId, replyId } = action.payload;
+          await commentService.upvoteSingleReply(commentId, replyId);
+          const updatedReply = await commentService.getSingleReply(
+            commentId,
+            replyId
+          );
+
+          dispatch({
+            type: CommentsResultType.UPDATE_REPLY,
+            payload: updatedReply,
+          });
+        } catch (error) {
+          setLoading(false, dispatch);
+          console.log(error);
+        }
+
+        break;
+      }
+
+      /**
+       * Downvote reply dispatch middleware
+       */
+      case CommentsActionType.DOWNVOTE_REPLY: {
+        setLoading(true, dispatch);
+
+        try {
+          const { commentId, replyId } = action.payload;
+          await commentService.downvoteSingleReply(commentId, replyId);
+          const updatedReply = await commentService.getSingleReply(
+            commentId,
+            replyId
+          );
+
+          dispatch({
+            type: CommentsResultType.UPDATE_REPLY,
+            payload: updatedReply,
+          });
+        } catch (error) {
+          setLoading(false, dispatch);
+          console.log(error);
+        }
+
+        break;
+      }
+
+      /**
+       * Flag reply dispatch middleware
+       */
+      case CommentsActionType.FLAG_REPLY: {
+        setLoading(true, dispatch);
+
+        try {
+          const { commentId, replyId } = action.payload;
+          await commentService.flagSingleReply(commentId, replyId);
+          const updatedReply = await commentService.getSingleReply(
+            commentId,
+            replyId
+          );
+
+          dispatch({
+            type: CommentsResultType.UPDATE_REPLY,
+            payload: updatedReply,
           });
         } catch (error) {
           setLoading(false, dispatch);

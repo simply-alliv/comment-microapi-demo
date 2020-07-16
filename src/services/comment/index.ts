@@ -1,5 +1,5 @@
 import CommentSDK from "comments-microapi-sdk";
-import { Comment } from "../../common/models";
+import { Comment, Reply } from "../../common/models";
 
 class CommentService {
   private sdkInstance: any;
@@ -25,7 +25,11 @@ class CommentService {
   }
 
   getSingleComment(commentId: string): Comment {
-    return this.sdkInstance.getSingleComment(commentId);
+    return this.sdkInstance
+      .getSingleComment(commentId)
+      .then((response: any) => {
+        return this.mapDataToComment(response.data);
+      });
   }
 
   getSingleCommentVotes(commentId: string): any {
@@ -36,7 +40,7 @@ class CommentService {
     return this.sdkInstance
       .createComment({
         ...createCommentDTO,
-        userId: this.ownerId,
+        ownerId: this.ownerId,
       })
       .then((response: any) => {
         return this.mapDataToComment(response.data);
@@ -49,7 +53,7 @@ class CommentService {
   ): any {
     return this.sdkInstance.updateCommentContent(commentId, {
       ...updateCommentDTO,
-      userId: this.ownerId,
+      ownerId: this.ownerId,
     });
   }
 
@@ -69,6 +73,71 @@ class CommentService {
     return this.sdkInstance.flagComment(commentId, this.ownerId);
   }
 
+  /** REPLIES */
+  getAllReplies(commentId: string, pageQuery?: any): Comment[] {
+    return this.sdkInstance
+      .getAllReplies(commentId, pageQuery)
+      .then((response: any) => {
+        return response.records.map((record: any) =>
+          this.mapDataToReply(record)
+        );
+      });
+  }
+
+  getSingleReply(commentId: string, replyId: string): Comment {
+    return this.sdkInstance
+      .getSingleReply(commentId, replyId)
+      .then((response: any) => {
+        return this.mapDataToReply(response.data);
+      });
+  }
+
+  getSingleReplyVotes(commentId: string, replyId: string): any {
+    return this.sdkInstance.getReplyVotes(commentId, replyId);
+  }
+
+  createSingleReply(commentId: string, createReplyDTO: { content: string }) {
+    return this.sdkInstance
+      .createReply(commentId, {
+        ...createReplyDTO,
+        ownerId: this.ownerId,
+      })
+      .then((response: any) => {
+        return this.mapDataToReply(response.data);
+      });
+  }
+
+  updateSingleReply(
+    commentId: string,
+    replyId: string,
+    updateReplyDTO: { content: string }
+  ): any {
+    return this.sdkInstance.updateReplyContent(commentId, replyId, {
+      ...updateReplyDTO,
+      ownerId: this.ownerId,
+    });
+  }
+
+  deleteSingleReply(commentId: string, replyId: string): any {
+    return this.sdkInstance.deleteSingleReply(commentId, replyId);
+  }
+
+  upvoteSingleReply(commentId: string, replyId: string): any {
+    return this.sdkInstance.upvoteSingleReply(commentId, replyId, this.ownerId);
+  }
+
+  downvoteSingleReply(commentId: string, replyId: string): any {
+    return this.sdkInstance.downvoteSingleReply(
+      commentId,
+      replyId,
+      this.ownerId
+    );
+  }
+
+  flagSingleReply(commentId: string, replyId: string): any {
+    return this.sdkInstance.flagReply(commentId, replyId, this.ownerId);
+  }
+
   private mapDataToComment = (data: any) => {
     return new Comment(
       data.applicationId,
@@ -82,6 +151,20 @@ class CommentService {
       data.numOfReplies,
       data.createdAt,
       data.updatedAt
+    );
+  };
+
+  private mapDataToReply = (data: any) => {
+    console.log(data);
+    return new Reply(
+      data.commentId,
+      data.replyId,
+      data.ownerId,
+      data.content,
+      data.numOfVotes,
+      data.numOfUpVotes,
+      data.numOfDownVotes,
+      data.numOfFlags
     );
   };
 }
