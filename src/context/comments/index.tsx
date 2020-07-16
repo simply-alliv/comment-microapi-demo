@@ -28,10 +28,27 @@ export const CommentsContext = createContext<
 >([initialState, () => null]);
 
 const reducer = (state: State, action: any) => {
+  // The reducer can be called twice for the same dispatch so a check to see
+  // if the comment has been added already is required.
+  //
+  // Proper fix needed.
+  //
+  // See issue: https://github.com/facebook/react/issues/16295
+  const commentExists = (commentId: string): boolean => {
+    const existingComment = state.comments.find(
+      (comment) => comment.commentId === commentId
+    );
+
+    return existingComment ? true : false;
+  };
+
+  // The switch block for the reducer actions.
   switch (action.type) {
     // Comments reducers
-    case CommentsResultType.NEW_COMMENT: {
-      state.comments.push(action.payload);
+    case CommentsResultType.ADD_COMMENT: {
+      if (!commentExists(action.payload.commentId)) {
+        state.comments.push(action.payload);
+      }
 
       const updatedState = {
         ...state,
@@ -41,10 +58,44 @@ const reducer = (state: State, action: any) => {
       return updatedState;
     }
 
-    case CommentsResultType.NEW_COMMENTS: {
-      action.payload.forEach((comment: any) => {
-        state.comments.push(comment);
+    case CommentsResultType.ADD_COMMENTS: {
+      action.payload.forEach((comment: Comment) => {
+        if (!commentExists(comment.commentId)) {
+          state.comments.push(comment);
+        }
       });
+
+      const updatedState = {
+        ...state,
+        loading: false,
+      };
+
+      return updatedState;
+    }
+
+    case CommentsResultType.UPDATE_COMMENT: {
+      if (!commentExists(action.payload.commentId)) {
+        const commentIndex = state.comments.indexOf(action.payload);
+
+        if (commentIndex !== -1) {
+          state.comments.splice(commentIndex, 1, action.payload);
+        }
+      }
+
+      const updatedState = {
+        ...state,
+        loading: false,
+      };
+
+      return updatedState;
+    }
+
+    case CommentsResultType.REMOVE_COMMENT: {
+      if (!commentExists(action.payload.commentId)) {
+        state.comments.filter(
+          (comment) => comment.commentId !== action.payload.commentId
+        );
+      }
 
       const updatedState = {
         ...state,
@@ -57,7 +108,7 @@ const reducer = (state: State, action: any) => {
     case CommentsResultType.SET_LOADING: {
       const updatedState = {
         ...state,
-        loading: true,
+        loading: action.payload.loading,
       };
 
       return updatedState;

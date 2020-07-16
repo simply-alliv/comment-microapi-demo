@@ -1,30 +1,89 @@
 import CommentSDK from "comments-microapi-sdk";
-// import { Comment } from "../../common/models";
-
-const commentApplicationToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBsaWNhdGlvbklkIjoiNWYwZjUxZjcxYjZjOWYwMDFlYzEzZjg4IiwiYWRtaW5JZCI6IjVmMGY1MWJlMWI2YzlmMDAxZWMxM2Y4NyIsImlhdCI6MTU5NDgzOTU0MywiZXhwIjoxNTk3NDMxNTQzfQ.IbeXp7eBI1E9HleuC1YjkQPa2NrXJoiFX8Is2ZHa6_A";
+import { Comment } from "../../common/models";
 
 class CommentService {
   private sdkInstance: any;
-  private comments: Comment[] = [];
+  private ownerId: string = "";
 
   constructor() {
-    this.sdkInstance = new CommentSDK(commentApplicationToken);
+    this.sdkInstance = new CommentSDK(
+      process.env.REACT_APP_COMMENTS_API_APP_TOKEN
+    );
     this.sdkInstance.init();
   }
 
-  async initializeState() {
-    const response = await this.getAllComments();
-    this.comments = response.records;
+  async initializeState(ownerId: string) {
+    this.ownerId = ownerId;
   }
 
-  getAllComments(): any {
-    return this.sdkInstance.getAllComments();
+  getAllComments(pageQuery?: any): Comment[] {
+    return this.sdkInstance.getAllComments(pageQuery).then((response: any) => {
+      return response.records.map((record: any) =>
+        this.mapDataToComment(record)
+      );
+    });
   }
 
-  createComment(createCommentDTO: { ownerId: string; content: string }): any {
-    return this.sdkInstance.createComment(createCommentDTO);
+  getSingleComment(commentId: string): Comment {
+    return this.sdkInstance.getSingleComment(commentId);
   }
+
+  getSingleCommentVotes(commentId: string): any {
+    return this.sdkInstance.getCommentVotes(commentId);
+  }
+
+  createSingleComment(createCommentDTO: { content: string }): Promise<Comment> {
+    return this.sdkInstance
+      .createComment({
+        ...createCommentDTO,
+        userId: this.ownerId,
+      })
+      .then((response: any) => {
+        return this.mapDataToComment(response.data);
+      });
+  }
+
+  updateSingleComment(
+    commentId: string,
+    updateCommentDTO: { content: string }
+  ): any {
+    return this.sdkInstance.updateCommentContent(commentId, {
+      ...updateCommentDTO,
+      userId: this.ownerId,
+    });
+  }
+
+  deleteSingleComment(commentId: string): any {
+    return this.sdkInstance.deleteSingleComment(commentId, this.ownerId);
+  }
+
+  upvoteSingleComment(commentId: string): any {
+    return this.sdkInstance.upvoteSingleComment(commentId, this.ownerId);
+  }
+
+  downvoteSingleComment(commentId: string): any {
+    return this.sdkInstance.downvoteSingleComment(commentId, this.ownerId);
+  }
+
+  flagSingleComment(commentId: string): any {
+    return this.sdkInstance.flagComment(commentId, this.ownerId);
+  }
+
+  private mapDataToComment = (data: any) => {
+    return new Comment(
+      data.applicationId,
+      data.commentId,
+      data.ownerId,
+      data.content,
+      data.numOfVotes,
+      data.numOfUpVotes,
+      data.numOfDownVotes,
+      data.numOfFlags,
+      data.numOfReplies,
+      data.createdAt,
+      data.updatedAt
+    );
+  };
 }
 
 export default CommentService;
