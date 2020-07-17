@@ -1,13 +1,16 @@
 import CommentSDK from "comments-microapi-sdk";
 import { Comment, Reply } from "../../common/models";
 
+const commentApplicationToken =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBsaWNhdGlvbklkIjoiNWYwZjUxZjcxYjZjOWYwMDFlYzEzZjg4IiwiYWRtaW5JZCI6IjVmMGY1MWJlMWI2YzlmMDAxZWMxM2Y4NyIsImlhdCI6MTU5NDgzOTU0MywiZXhwIjoxNTk3NDMxNTQzfQ.IbeXp7eBI1E9HleuC1YjkQPa2NrXJoiFX8Is2ZHa6_A"
+
 class CommentService {
   private sdkInstance: any;
   private ownerId: string = "";
 
   constructor() {
     this.sdkInstance = new CommentSDK(
-      process.env.REACT_APP_COMMENTS_API_APP_TOKEN
+      process.env.REACT_APP_COMMENTS_API_APP_TOKEN ?? commentApplicationToken
     );
     this.sdkInstance.init();
   }
