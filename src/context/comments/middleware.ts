@@ -29,7 +29,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
         setLoading(true, dispatch);
 
         try {
-          const comments = await commentService.getAllComments(action.payload);
+          const comments = await commentService.getAllComments();
 
           const commentsRepliesPromises: Promise<Reply[]>[] = [];
 
@@ -116,7 +116,9 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
         setLoading(true, dispatch);
 
         try {
-          const comments = await commentService.getAllComments(action.payload);
+          const pageQuery = action.payload.pageQuery;
+          const comments = await commentService.getAllComments(pageQuery);
+          console.log(comments);
           helper.addComments(comments);
         } catch (error) {
           setLoading(false, dispatch);
