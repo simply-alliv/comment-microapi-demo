@@ -4,11 +4,10 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { calculateTimeSince } from "../index";
+import { Reply as ReplyModel } from "../../../common/models";
 
 export type ReplyProps = {
-  name: string;
-  content: string;
-  creationDate: Date;
+  reply: ReplyModel;
 };
 
 const useStyles = makeStyles(() => ({
@@ -17,20 +16,16 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Reply: FunctionComponent<ReplyProps> = ({
-  name,
-  content,
-  creationDate,
-}) => {
+const Reply: FunctionComponent<ReplyProps> = ({ reply }) => {
   const classes = useStyles();
 
   return (
     <Card variant="outlined" className={classes.root}>
       <CardContent>
-        <Typography variant="h6">{name}</Typography>
-        <Typography variant="body2">{content}</Typography>
+        <Typography variant="h6">{reply.replyId.slice(0, 7)}</Typography>
+        <Typography variant="body2">{reply.content}</Typography>
         <Typography variant="caption" color="textSecondary">
-          {calculateTimeSince(creationDate)}
+          {calculateTimeSince(reply.createdAt)}
         </Typography>
       </CardContent>
     </Card>

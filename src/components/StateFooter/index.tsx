@@ -1,15 +1,18 @@
 import React, { useContext } from "react";
-import { Box, Button } from "@material-ui/core";
+import { Box, Button, makeStyles } from "@material-ui/core";
 import { CommentsContext } from "../../context/comments";
 import CommentDialog from "../CommentDialog";
 import CommentsActionType from "../../common/enums/comments-action-type";
-import { CommentProps } from "../Comment";
 
-type StateFooterProps = {
-  comments: CommentProps[];
-};
+const useStyles = makeStyles({
+  root: {
+    position: "fixed",
+    width: "100%",
+    bottom: 0,
+  },
+});
 
-const StateFooter = ({ comments }: StateFooterProps) => {
+const StateFooter = () => {
   const dispatch = useContext(CommentsContext)[1];
   const [open, setOpen] = React.useState(false);
 
@@ -23,8 +26,10 @@ const StateFooter = ({ comments }: StateFooterProps) => {
 
   const handleClose = () => setOpen(false);
 
+  const classes = useStyles();
+
   return (
-    <React.Fragment>
+    <div className={classes.root}>
       <Box display="flex" justifyContent="space-between" p={2}>
         <Button onClick={handleViewState}>View Current State</Button>
         <Button onClick={handleResetState}>Reset State</Button>
@@ -32,7 +37,6 @@ const StateFooter = ({ comments }: StateFooterProps) => {
       <Box>
         <CommentDialog
           isOpen={open}
-          comments={comments}
           handleClose={handleClose}
           title={"Current State"}
           subtitle={"The curent saved state of your comments."}
@@ -40,7 +44,7 @@ const StateFooter = ({ comments }: StateFooterProps) => {
           cancelLabel={"Let me continue"}
         />
       </Box>
-    </React.Fragment>
+    </div>
   );
 };
 

@@ -61,6 +61,29 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
       }
 
       /**
+       * Reset all comments and replies dispatch middleware
+       */
+      case CommentsActionType.RESET_STATE: {
+        setLoading(true, dispatch);
+
+        try {
+          const comments = await commentService.getAllComments();
+
+          comments.forEach((comment) => {
+            helper.removeComment(comment.commentId);
+          });
+
+          dispatch({
+            type: CommentsResultType.RESET_STATE,
+          });
+        } catch (error) {
+          setLoading(false, dispatch);
+        }
+
+        break;
+      }
+
+      /**
        * Set the selected comment, or reply, dispatch middleware
        */
       case CommentsActionType.SET_SELECTED_COMMENT:

@@ -8,7 +8,6 @@ import VoteReply from "./VoteReply";
 import FlagReply from "./FlagReply";
 import StateFooter from "../StateFooter";
 import { CommentsContext } from "../../context/comments";
-import mockCommentProps from "../../context/comments/mock-comment-props";
 
 export const tabLabels: string[] = [
   "Reply Create",
@@ -53,7 +52,7 @@ const Replies: FunctionComponent<RepliesProps> = ({ tabValueState }) => {
           );
         })
       )}
-      <StateFooter comments={mockCommentProps} />
+      <StateFooter />
     </React.Fragment>
   );
 };

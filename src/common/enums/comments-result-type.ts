@@ -1,5 +1,6 @@
 enum CommentsResultType {
   SET_LOADING,
+  RESET_STATE,
   SET_SELECTED_COMMENT,
   ADD_COMMENT,
   ADD_COMMENTS,

@@ -1,14 +1,16 @@
 import React, { FunctionComponent } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import Box from "@material-ui/core/Box";
-import AppBar from "@material-ui/core/AppBar";
-import Link from "@material-ui/core/Link";
-import Toolbar from "@material-ui/core/Toolbar";
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
 import HomeIcon from "@material-ui/icons/Home";
 import { Route } from "../../../common/models";
 import { RoutePath } from "../../../common/enums";
+import {
+  Box,
+  AppBar,
+  Link,
+  Toolbar,
+  Button,
+  IconButton,
+} from "@material-ui/core";
 
 type CustomAppBarProps = {
   currentRoute: Route;
@@ -24,7 +26,7 @@ const CustomAppBar: FunctionComponent<CustomAppBarProps> = ({
   };
 
   return (
-    <AppBar position="relative" elevation={2}>
+    <AppBar position="sticky">
       <Toolbar>
         <Box
           display="flex"

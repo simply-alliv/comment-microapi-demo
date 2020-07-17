@@ -253,6 +253,10 @@ const reducer = (state: State, action: any) => {
       return updatedState;
     }
 
+    case CommentsResultType.RESET_STATE: {
+      return initialState;
+    }
+
     default:
       throw new Error();
   }
