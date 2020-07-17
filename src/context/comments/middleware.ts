@@ -423,7 +423,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
 
           dispatch({
             type: CommentsResultType.UPDATE_REPLY,
-            payload: updatedReply,
+            payload: { commentId, updatedReply },
           });
         } catch (error) {
           setLoading(false, dispatch);
@@ -449,7 +449,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
 
           dispatch({
             type: CommentsResultType.UPDATE_REPLY,
-            payload: updatedReply,
+            payload: { commentId, updatedReply },
           });
         } catch (error) {
           setLoading(false, dispatch);
@@ -475,7 +475,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
 
           dispatch({
             type: CommentsResultType.UPDATE_REPLY,
-            payload: updatedReply,
+            payload: { commentId, updatedReply },
           });
         } catch (error) {
           setLoading(false, dispatch);
