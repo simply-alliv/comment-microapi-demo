@@ -25,6 +25,10 @@ const theme = createMuiTheme({
         body: {
           backgroundColor: "white",
         },
+        html: {
+          overflow: "-moz-scrollbars-vertical",
+          overflowY: "scroll",
+        },
       },
     },
   },
