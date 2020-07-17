@@ -1,9 +1,8 @@
-import React, { FunctionComponent, useContext, useState } from "react";
+import React, { FunctionComponent, useContext } from "react";
 import { Box, Typography, TextareaAutosize, Button } from "@material-ui/core";
 import TabViewIntroSection from "../../TabViewIntroSection";
 import CommentSelect from "../../CommentSelect";
 import { CommentsContext } from "../../../context/comments";
-import { Comment } from "../../../common/models";
 import { CommentsActionType } from "../../../common/enums";
 
 const createComponentEndpoints = ["POST /comments/:commentId/replies"];
@@ -12,7 +11,6 @@ const createComponentSubtitle = "Comments can always be responded to.";
 
 const CreateReply: FunctionComponent = () => {
   const [state, dispatch] = useContext(CommentsContext);
-  const [selectedComment, setSelectedComment] = useState(state.comments[0]);
   let content = "";
 
   const handleContentChange = (
@@ -21,15 +19,11 @@ const CreateReply: FunctionComponent = () => {
     content = event.target.value;
   };
 
-  const handleSelectedCommentChange = (comment: Comment) => {
-    setSelectedComment(comment);
-  };
-
   const handleCreateReplyClick = () => {
     dispatch({
       type: CommentsActionType.CREATE_REPLY,
       payload: {
-        commentId: selectedComment.commentId,
+        commentId: state.selectedComment?.commentId,
         createReplyDTO: { content },
       },
     });
@@ -48,10 +42,7 @@ const CreateReply: FunctionComponent = () => {
         </Typography>
       </Box>
       <Box mb={1} display="flex" justifyContent="center">
-        <CommentSelect
-          state={state}
-          onChange={handleSelectedCommentChange}
-        ></CommentSelect>
+        <CommentSelect></CommentSelect>
       </Box>
       <Box mt={6}>
         <Typography variant="body2" align="center" color="textSecondary">
@@ -69,7 +60,7 @@ const CreateReply: FunctionComponent = () => {
         <Button
           variant="contained"
           color="secondary"
-          disabled={state.loading}
+          disabled={state.loading || state.selectedComment === undefined}
           onClick={handleCreateReplyClick}
         >
           {state.loading ? "Please Wait..." : "Create Reply"}

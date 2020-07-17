@@ -1,6 +1,4 @@
-import React, { FunctionComponent, useState } from "react";
-
-import { State as CommentsContextState } from "../../context/comments";
+import React, { FunctionComponent, useContext } from "react";
 import {
   makeStyles,
   FormControl,
@@ -9,6 +7,8 @@ import {
   MenuItem,
 } from "@material-ui/core";
 import { Comment } from "../../common/models";
+import { CommentsContext } from "../../context/comments";
+import { CommentsActionType } from "../../common/enums";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,34 +23,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type CommentSelectProps = {
-  state: CommentsContextState;
-  onChange: Function;
-};
-
-const CommentSelect: FunctionComponent<CommentSelectProps> = ({
-  state,
-  onChange,
-}) => {
-  const [selectedComment, setSelectedComment] = useState(state.comments[0]);
+const CommentSelect: FunctionComponent = () => {
+  const [state, dispatch] = useContext(CommentsContext);
 
   const classes = useStyles();
 
   const handleSelectedCommentChange = (event: React.ChangeEvent<any>) => {
-    const commentId = event.target.value;
-    const selectedComment = state.comments.find(
-      (comment: Comment) => comment.commentId === commentId
-    );
-    if (selectedComment) {
-      onChange(selectedComment);
-      setSelectedComment(selectedComment);
-    }
+    dispatch({
+      type: CommentsActionType.SET_SELECTED_COMMENT,
+      payload: { commentId: event.target.value },
+    });
   };
 
   return (
     <FormControl className={classes.formControl}>
       <Select
-        value={selectedComment.commentId}
+        value={state.selectedComment?.commentId ?? ""}
         onChange={handleSelectedCommentChange}
         displayEmpty
         className={classes.selectEmpty}

@@ -6,26 +6,42 @@ import Link from "@material-ui/core/Link";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
-import Comment, { CommentProps } from "../Comment";
-import { ReplyProps } from "../Comment/Reply";
+import Comment from "../Comment";
+import {
+  Comment as CommentModel,
+  Reply as ReplyModel,
+} from "../../common/models";
 import { RoutePath } from "../../common/enums";
 
-const replies: ReplyProps[] = [
+const replies: ReplyModel[] = [
   {
-    name: "Mary A",
+    commentId: "5f105031f64edc001eef4abb",
+    replyId: "5f10dca328a306001e18b298",
+    ownerId: "you@gmail.com",
     content:
       "Good morning James. That’s right. I will see you then at the Cocoa Wah Wah.",
-    creationDate: new Date(Date.parse("2020-07-13T21:40:00")),
+    numOfVotes: 0,
+    numOfUpVotes: 0,
+    numOfDownVotes: 0,
+    numOfFlags: 0,
+    createdAt: "2020-07-16T22:04:56.945Z",
+    updatedAt: "2020-07-17T17:47:10.895Z",
   },
 ];
 
-const comment: CommentProps = {
-  name: "James James",
-  content: `Hey, I hope that you are well. I was just looking to confirm our
-  meeting for 10am sharp this morning. Please get back to me as soon
-  as you get this.`,
-  creationDate: new Date(Date.parse("2020-07-13T18:40:00")),
-  replies,
+const comment: CommentModel = {
+  commentId: "5f105031f64edc001eef4abb",
+  applicationId: "5f0f51f71b6c9f001ec13f88",
+  ownerId: "you@gmail.com",
+  content:
+    "Hey, I hope that you are well. I was just looking to confirm our meeting for 10am sharp this morning. Please get back to me as soon as you get this.",
+  numOfVotes: 0,
+  numOfUpVotes: 0,
+  numOfDownVotes: 0,
+  numOfFlags: 0,
+  numOfReplies: 1,
+  createdAt: "2020-07-16T13:03:45.782Z",
+  updatedAt: "2020-07-17T18:45:04.551Z",
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -53,12 +69,7 @@ const Home: FunctionComponent = () => {
           </Typography>
         </Box>
         <Box p={4}>
-          <Comment
-            name={comment.name}
-            content={comment.content}
-            creationDate={comment.creationDate}
-            replies={comment.replies}
-          />
+          <Comment comment={comment} replies={replies} />
         </Box>
         <Box pb={2} display="flex" justifyContent="center">
           <Link component={RouterLink} to={RoutePath.Comments}>

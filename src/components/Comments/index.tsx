@@ -7,8 +7,8 @@ import DeleteComment from "./DeleteComment";
 import VoteComment from "./VoteComment";
 import FlagComment from "./FlagComment";
 import StateFooter from "../StateFooter";
+import LoadingScreen from "../LoadingScreen";
 import { CommentsContext } from "../../context/comments";
-import mockCommentProps from "../../context/comments/mock-comment-props"
 
 export const tabLabels: string[] = [
   "Comment Create",
@@ -38,7 +38,7 @@ const Comments: FunctionComponent<CommentsProps> = ({ tabValueState }) => {
   return (
     <React.Fragment>
       {!state.commentsLoaded && state.loading ? (
-        <React.Fragment></React.Fragment>
+        <LoadingScreen></LoadingScreen>
       ) : (
         state.commentsLoaded &&
         tabViews.map((element, index) => {
@@ -53,7 +53,7 @@ const Comments: FunctionComponent<CommentsProps> = ({ tabValueState }) => {
           );
         })
       )}
-      <StateFooter comments={mockCommentProps} />
+      <StateFooter />
     </React.Fragment>
   );
 };

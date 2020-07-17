@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useContext } from "react";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -6,28 +6,40 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Comment, { CommentProps } from "../Comment";
+import Comment from "../Comment";
+import { makeStyles } from "@material-ui/core/styles";
+import { CommentsContext } from "../../context/comments";
+
+const useStyles = makeStyles({
+  button: {
+    justifyContent: "flex-end",
+  },
+});
 
 type CallBackFunction = () => void;
 type CommentDialogProps = {
-  isOpen?: boolean,
-  comments?: CommentProps[],
-  handleClose: CallBackFunction,
-  title?: string,
-  subtitle?: string,
-  okLabel?: string,
-  cancelLabel?: string,
-}
+  isOpen?: boolean;
+  handleClose: CallBackFunction;
+  title?: string;
+  subtitle?: string;
+  okLabel?: string;
+  cancelLabel?: string;
+};
 
 const CommentDialog: FunctionComponent<CommentDialogProps> = ({
   isOpen = false,
-  comments = [],
   handleClose,
   title = "Title",
   subtitle = "Subtitle",
   okLabel = "Ok",
   cancelLabel = "Cancel",
 }) => {
+  const state = useContext(CommentsContext)[0];
+  const classes = useStyles();
+
+  const getRepliesForComment = (commentId: string) => {
+    return state.replies.filter((reply) => reply.commentId === commentId);
+  };
 
   return (
     <div>
@@ -43,19 +55,34 @@ const CommentDialog: FunctionComponent<CommentDialogProps> = ({
           <DialogContentText>{subtitle}</DialogContentText>
         </DialogContent>
         <DialogContent dividers>
-          <DialogContentText
-            id="scroll-dialog-description"
-            tabIndex={-1}
-          >
-            {comments.map((item, index) => (
-              <Comment key={index} {...item} />
+          <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
+            {state.comments.map((comment) => (
+              <Comment
+                key={comment.commentId}
+                comment={comment}
+                replies={getRepliesForComment(comment.commentId)}
+              />
             ))}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Box display="flex" flexDirection="column">
-            <Button color="secondary" onClick={handleClose}>{okLabel}</Button>
-            <Button color="secondary" onClick={handleClose}>{cancelLabel}</Button>
+          <Box display="flex" flexDirection="column" width="100%">
+            <Button
+              className={classes.button}
+              color="secondary"
+              fullWidth={true}
+              onClick={handleClose}
+            >
+              {okLabel}
+            </Button>
+            <Button
+              className={classes.button}
+              color="secondary"
+              fullWidth={true}
+              onClick={handleClose}
+            >
+              {cancelLabel}
+            </Button>
           </Box>
         </DialogActions>
       </Dialog>

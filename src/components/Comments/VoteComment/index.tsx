@@ -8,7 +8,6 @@ import Typography from "@material-ui/core/Typography";
 import TabViewIntroSection from "../../TabViewIntroSection";
 import CommentSelect from "../../CommentSelect";
 import { CommentsContext } from "../../../context/comments";
-import { Comment } from "../../../common/models";
 import { CommentsActionType } from "../../../common/enums";
 
 const voteComponentEndpoints = [
@@ -31,13 +30,8 @@ const useStyles = makeStyles(() => ({
 const VoteComment: FunctionComponent = () => {
   const [state, dispatch] = useContext(CommentsContext);
   const [selectedVoteType, setSelectedVoteType] = useState(voteTypes[0]);
-  const [selectedComment, setSelectedComment] = useState(state.comments[0]);
 
   const classes = useStyles();
-
-  const handleSelectedCommentChange = (comment: Comment) => {
-    setSelectedComment(comment);
-  };
 
   const handleVoteSingleCommentClick = () => {
     const type =
@@ -47,7 +41,7 @@ const VoteComment: FunctionComponent = () => {
 
     dispatch({
       type,
-      payload: { commentId: selectedComment.commentId },
+      payload: { commentId: state.selectedComment?.commentId },
     });
   };
 
@@ -64,10 +58,7 @@ const VoteComment: FunctionComponent = () => {
       </Typography>
       <Box mb={1}></Box>
       <Box mb={1} display="flex" justifyContent="center">
-        <CommentSelect
-          state={state}
-          onChange={handleSelectedCommentChange}
-        ></CommentSelect>
+        <CommentSelect></CommentSelect>
       </Box>
       <Box mt={6}></Box>
       <Typography variant="body2" align="center" color="textSecondary">

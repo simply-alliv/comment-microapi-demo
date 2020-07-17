@@ -3,7 +3,6 @@ import { Box, Button, Grid, makeStyles, Typography } from "@material-ui/core";
 import TabViewIntroSection from "../../TabViewIntroSection";
 import { CommentsContext } from "../../../context/comments";
 import { CommentsActionType } from "../../../common/enums";
-import { Comment, Reply } from "../../../common/models";
 import CommentSelect from "../../CommentSelect";
 import ReplySelect from "../../ReplySelect";
 
@@ -26,33 +25,25 @@ const useStyles = makeStyles({
 
 const VoteReply: FunctionComponent = () => {
   const [state, dispatch] = useContext(CommentsContext);
-  const [selectedComment, setSelectedComment] = useState(state.comments[0]);
-  const [selectedReply, setSelectedReply] = useState<Reply>([][0]);
   const [selectedVoteType, setSelectedVoteType] = useState(voteTypes[0]);
 
   const classes = useStyles();
 
-  const handleSelectedCommentChange = (comment: Comment) => {
-    setSelectedComment(comment);
-  };
-
-  const handleSelectedReplyChange = (reply: Reply) => {
-    setSelectedReply(reply);
-  };
-
   const handleVoteSingleReplyClick = () => {
-    const type =
-      selectedVoteType === voteTypes[0]
-        ? CommentsActionType.UPVOTE_REPLY
-        : CommentsActionType.DOWNVOTE_REPLY;
+    if (state.selectedComment && state.selectedReply) {
+      const type =
+        selectedVoteType === voteTypes[0]
+          ? CommentsActionType.UPVOTE_REPLY
+          : CommentsActionType.DOWNVOTE_REPLY;
 
-    dispatch({
-      type,
-      payload: {
-        commentId: selectedComment.commentId,
-        replyId: selectedReply.replyId,
-      },
-    });
+      dispatch({
+        type,
+        payload: {
+          commentId: state.selectedComment.commentId,
+          replyId: state.selectedReply.replyId,
+        },
+      });
+    }
   };
 
   return (
@@ -68,10 +59,7 @@ const VoteReply: FunctionComponent = () => {
         </Typography>
       </Box>
       <Box mb={1} display="flex" justifyContent="center">
-        <CommentSelect
-          state={state}
-          onChange={handleSelectedCommentChange}
-        ></CommentSelect>
+        <CommentSelect></CommentSelect>
       </Box>
       <Box mt={6} mb={1}>
         <Typography variant="body2" align="center" color="textSecondary">
@@ -79,11 +67,7 @@ const VoteReply: FunctionComponent = () => {
         </Typography>
       </Box>
       <Box mb={1} display="flex" justifyContent="center">
-        <ReplySelect
-          state={state}
-          selectedComment={selectedComment}
-          onChange={handleSelectedReplyChange}
-        ></ReplySelect>
+        <ReplySelect></ReplySelect>
       </Box>
       <Box mt={6} mb={1}>
         <Typography variant="body2" align="center" color="textSecondary">
@@ -110,12 +94,16 @@ const VoteReply: FunctionComponent = () => {
         <Button
           variant="contained"
           color="secondary"
-          disabled={state.loading || selectedReply?.replyId === undefined}
+          disabled={
+            state.loading ||
+            state.selectedComment === undefined ||
+            state.selectedReply === undefined
+          }
           onClick={handleVoteSingleReplyClick}
         >
           {state.loading
             ? "Please Wait..."
-            : selectedReply?.replyId === undefined
+            : state.selectedReply === undefined
             ? "No Reply"
             : selectedVoteType === voteTypes[0]
             ? "Upvote Reply"

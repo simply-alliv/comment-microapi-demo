@@ -1,11 +1,10 @@
-import React, { FunctionComponent, useState, useContext } from "react";
+import React, { FunctionComponent, useContext } from "react";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import TabViewIntroSection from "../../TabViewIntroSection";
 import CommentSelect from "../../CommentSelect";
 import { CommentsContext } from "../../../context/comments";
-import { Comment } from "../../../common/models";
 import { CommentsActionType } from "../../../common/enums";
 
 const deleteComponentEndpoints = ["DELETE /comments/:commentId"];
@@ -15,17 +14,14 @@ const deleteComponentSubtitle =
 
 const DeleteComment: FunctionComponent = () => {
   const [state, dispatch] = useContext(CommentsContext);
-  const [selectedComment, setSelectedComment] = useState(state.comments[0]);
-
-  const handleSelectedCommentChange = (comment: Comment) => {
-    setSelectedComment(comment);
-  };
 
   const handleDeleteSingleCommentClick = () => {
-    dispatch({
-      type: CommentsActionType.DELETE_COMMENT,
-      payload: { commentId: selectedComment.commentId },
-    });
+    if (state.selectedComment) {
+      dispatch({
+        type: CommentsActionType.DELETE_COMMENT,
+        payload: { commentId: state.selectedComment.commentId },
+      });
+    }
   };
 
   return (
@@ -41,16 +37,13 @@ const DeleteComment: FunctionComponent = () => {
         </Typography>
       </Box>
       <Box mb={1} display="flex" justifyContent="center">
-        <CommentSelect
-          state={state}
-          onChange={handleSelectedCommentChange}
-        ></CommentSelect>
+        <CommentSelect></CommentSelect>
       </Box>
       <Box display="flex" flexDirection="column" alignItems="center" mt={4}>
         <Button
           variant="contained"
           color="secondary"
-          disabled={state.loading}
+          disabled={state.loading || state.selectedComment === undefined}
           onClick={handleDeleteSingleCommentClick}
         >
           {state.loading ? "Please Wait..." : "Delete Comment"}

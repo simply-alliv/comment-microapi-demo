@@ -12,6 +12,9 @@ import { CommentsActionType, CommentsResultType } from "../../common/enums";
 export interface State {
   comments: Comment[];
   replies: Reply[];
+  selectedComment?: Comment;
+  selectedCommentReplies?: Reply[];
+  selectedReply?: Reply;
   commentsLoaded: boolean;
   repliesLoaded: boolean;
   loading: boolean;
@@ -20,6 +23,9 @@ export interface State {
 const initialState: State = {
   comments: [],
   replies: [],
+  selectedComment: undefined,
+  selectedCommentReplies: undefined,
+  selectedReply: undefined,
   commentsLoaded: false,
   repliesLoaded: false,
   loading: false,
@@ -27,7 +33,13 @@ const initialState: State = {
 
 // Creat Context Object
 export const CommentsContext = createContext<
-  [State, React.Dispatch<{ type: CommentsActionType; payload?: any }>]
+  [
+    State,
+    React.Dispatch<{
+      type: CommentsActionType | CommentsResultType;
+      payload?: any;
+    }>
+  ]
 >([initialState, () => null]);
 
 const reducer = (state: State, action: any) => {
@@ -58,9 +70,35 @@ const reducer = (state: State, action: any) => {
   // The switch block for the reducer actions.
   switch (action.type) {
     // Comments reducers
+    case CommentsResultType.SET_SELECTED_COMMENT: {
+      const commentId = action.payload.commentId;
+
+      let updatedState: State = { ...state };
+
+      if (state.selectedComment?.commentId !== commentId) {
+        const comment = state.comments.find(
+          (comment) => comment.commentId === commentId
+        );
+
+        const commentReplies = state.replies.filter(
+          (reply) => reply.commentId === commentId
+        );
+
+        updatedState = {
+          ...state,
+          selectedComment: comment,
+          selectedCommentReplies: commentReplies,
+        };
+      }
+
+      return updatedState;
+    }
+
     case CommentsResultType.ADD_COMMENT: {
-      if (!commentExists(action.payload.commentId)) {
-        state.comments.push(action.payload);
+      const comment = action.payload.comment;
+
+      if (!commentExists(comment.commentId)) {
+        state.comments.push(comment);
       }
 
       const updatedState = {
@@ -72,7 +110,9 @@ const reducer = (state: State, action: any) => {
     }
 
     case CommentsResultType.ADD_COMMENTS: {
-      action.payload.comments.forEach((comment: Comment) => {
+      const comments = action.payload.comments;
+
+      comments.forEach((comment: Comment) => {
         if (!commentExists(comment.commentId)) {
           state.comments.push(comment);
         }
@@ -88,7 +128,7 @@ const reducer = (state: State, action: any) => {
     }
 
     case CommentsResultType.UPDATE_COMMENT: {
-      const updatedComment = action.payload;
+      const updatedComment = action.payload.updatedComment;
       if (commentExists(updatedComment.commentId)) {
         state.comments.forEach((comment, index) => {
           if (comment.commentId === updatedComment.commentId) {
@@ -121,6 +161,23 @@ const reducer = (state: State, action: any) => {
     }
 
     // Replies reducers
+    case CommentsResultType.SET_SELECTED_REPLY: {
+      const replyId = action.payload.replyId;
+
+      let updatedState: State = { ...state };
+
+      if (state.selectedReply?.replyId !== replyId) {
+        const reply = state.replies.find((reply) => reply.replyId === replyId);
+
+        updatedState = {
+          ...state,
+          selectedReply: reply,
+        };
+      }
+
+      return updatedState;
+    }
+
     case CommentsResultType.ADD_REPLY: {
       const { commentId, reply } = action.payload;
       if (!replyExists(commentId, reply.replyId)) {
@@ -194,6 +251,10 @@ const reducer = (state: State, action: any) => {
       };
 
       return updatedState;
+    }
+
+    case CommentsResultType.RESET_STATE: {
+      return initialState;
     }
 
     default:

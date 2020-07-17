@@ -9,8 +9,8 @@ class Reply {
     public numOfUpVotes: number,
     public numOfDownVotes: number,
     public numOfFlags: number,
-    public createdAt: number,
-    public updatedAt: number
+    public createdAt: string,
+    public updatedAt: string
   ) {}
 }
 

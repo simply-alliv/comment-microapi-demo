@@ -1,9 +1,8 @@
-import React, { FunctionComponent, useState, useContext } from "react";
+import React, { FunctionComponent, useContext } from "react";
 import { Box, Button, Typography } from "@material-ui/core";
 import TabViewIntroSection from "../../../TabViewIntroSection";
 import { CommentsContext } from "../../../../context/comments";
 import { CommentsActionType } from "../../../../common/enums";
-import { Comment, Reply } from "../../../../common/models";
 import CommentSelect from "../../../CommentSelect";
 import ReplySelect from "../../../ReplySelect";
 
@@ -13,25 +12,17 @@ const getSingleReplySubtitle = "Need to get a specific reply?";
 
 const SingleReply: FunctionComponent = () => {
   const [state, dispatch] = useContext(CommentsContext);
-  const [selectedComment, setSelectedComment] = useState(state.comments[0]);
-  const [selectedReply, setSelectedReply] = useState<Reply>([][0]);
-
-  const handleSelectedCommentChange = (comment: Comment) => {
-    setSelectedComment(comment);
-  };
-
-  const handleSelectedReplyChange = (reply: Reply) => {
-    setSelectedReply(reply);
-  };
 
   const handleGetSingleReplyClick = () => {
-    dispatch({
-      type: CommentsActionType.GET_REPLY,
-      payload: {
-        commentId: selectedComment.commentId,
-        replyId: selectedReply.replyId,
-      },
-    });
+    if (state.selectedComment && state.selectedReply) {
+      dispatch({
+        type: CommentsActionType.GET_REPLY,
+        payload: {
+          commentId: state.selectedComment.commentId,
+          replyId: state.selectedReply.replyId,
+        },
+      });
+    }
   };
 
   return (
@@ -47,10 +38,7 @@ const SingleReply: FunctionComponent = () => {
         </Typography>
       </Box>
       <Box mb={1} display="flex" justifyContent="center">
-        <CommentSelect
-          state={state}
-          onChange={handleSelectedCommentChange}
-        ></CommentSelect>
+        <CommentSelect></CommentSelect>
       </Box>
       <Box mt={6} mb={1}>
         <Typography variant="body2" align="center" color="textSecondary">
@@ -58,22 +46,22 @@ const SingleReply: FunctionComponent = () => {
         </Typography>
       </Box>
       <Box mb={1} display="flex" justifyContent="center">
-        <ReplySelect
-          state={state}
-          selectedComment={selectedComment}
-          onChange={handleSelectedReplyChange}
-        ></ReplySelect>
+        <ReplySelect></ReplySelect>
       </Box>
       <Box display="flex" flexDirection="column" alignItems="center" mt={4}>
         <Button
           variant="contained"
           color="secondary"
-          disabled={state.loading || selectedReply?.replyId === undefined}
+          disabled={
+            state.loading ||
+            state.selectedComment === undefined ||
+            state.selectedReply === undefined
+          }
           onClick={handleGetSingleReplyClick}
         >
           {state.loading
             ? "Please Wait..."
-            : selectedReply?.replyId === undefined
+            : state.selectedReply === undefined
             ? "No Reply"
             : "Get Reply"}
         </Button>

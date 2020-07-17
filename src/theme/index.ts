@@ -17,7 +17,20 @@ const theme = createMuiTheme({
     },
   },
   shape: {
-    borderRadius: 10,
+    borderRadius: 8,
+  },
+  overrides: {
+    MuiCssBaseline: {
+      "@global": {
+        body: {
+          backgroundColor: "white",
+        },
+        html: {
+          overflow: "-moz-scrollbars-vertical",
+          overflowY: "scroll",
+        },
+      },
+    },
   },
 });
 

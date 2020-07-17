@@ -5,13 +5,15 @@ import CardContent from "@material-ui/core/CardContent";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import Reply, { ReplyProps } from "./Reply";
+import Reply from "./Reply";
+import {
+  Comment as CommentModel,
+  Reply as ReplyModel,
+} from "../../common/models";
 
 export type CommentProps = {
-  name: string;
-  content: string;
-  creationDate: Date;
-  replies: ReplyProps[];
+  comment: CommentModel;
+  replies: ReplyModel[];
 };
 
 const useStyles = makeStyles(() => ({
@@ -20,39 +22,26 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Comment: FunctionComponent<CommentProps> = ({
-  name,
-  content,
-  creationDate,
-  replies,
-}) => {
+const Comment: FunctionComponent<CommentProps> = ({ comment, replies }) => {
   const classes = useStyles();
 
   return (
     <React.Fragment>
       <Card>
         <CardContent>
-          <Typography variant="h6">{name}</Typography>
-          <Typography variant="body2">{content}</Typography>
+          <Typography variant="h6">{comment.commentId.slice(0, 7)}</Typography>
+          <Typography variant="body2">{comment.content}</Typography>
           <Typography variant="caption" color="textSecondary">
-            {calculateTimeSince(creationDate)}
+            {calculateTimeSince(comment.createdAt)}
           </Typography>
         </CardContent>
       </Card>
       <Box py={2}>
         <Grid container spacing={2}>
-          {replies.map((reply) => {
+          {replies.map((reply: ReplyModel) => {
             return (
-              <Grid
-                item
-                key={reply.creationDate.getTime()}
-                className={classes.root}
-              >
-                <Reply
-                  name={reply.name}
-                  content={reply.content}
-                  creationDate={reply.creationDate}
-                />
+              <Grid item key={reply.replyId} className={classes.root}>
+                <Reply reply={reply} />
               </Grid>
             );
           })}
@@ -64,7 +53,9 @@ const Comment: FunctionComponent<CommentProps> = ({
 
 export default Comment;
 
-export const calculateTimeSince = (creationDate: Date) => {
+export const calculateTimeSince = (createdAt: string) => {
+  const creationDate = new Date(createdAt);
+
   const seconds = Math.floor(
     (new Date().valueOf() - creationDate.valueOf()) / 1000
   );
