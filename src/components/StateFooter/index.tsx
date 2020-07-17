@@ -10,7 +10,7 @@ type StateFooterProps = {
 };
 
 const StateFooter = ({ comments }: StateFooterProps) => {
-  const dispatch = useContext(CommentsContext)[0];
+  const dispatch = useContext(CommentsContext)[1];
   const [open, setOpen] = React.useState(false);
 
   const handleViewState = () => setOpen(true);
