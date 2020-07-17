@@ -7,6 +7,7 @@ import DeleteComment from "./DeleteComment";
 import VoteComment from "./VoteComment";
 import FlagComment from "./FlagComment";
 import StateFooter from "../StateFooter";
+import LoadingScreen from "../LoadingScreen";
 import { CommentsContext } from "../../context/comments";
 
 export const tabLabels: string[] = [
@@ -37,7 +38,7 @@ const Comments: FunctionComponent<CommentsProps> = ({ tabValueState }) => {
   return (
     <React.Fragment>
       {!state.commentsLoaded && state.loading ? (
-        <React.Fragment></React.Fragment>
+        <LoadingScreen></LoadingScreen>
       ) : (
         state.commentsLoaded &&
         tabViews.map((element, index) => {

@@ -7,6 +7,7 @@ import DeleteReply from "./DeleteReply";
 import VoteReply from "./VoteReply";
 import FlagReply from "./FlagReply";
 import StateFooter from "../StateFooter";
+import LoadingScreen from "../LoadingScreen";
 import { CommentsContext } from "../../context/comments";
 
 export const tabLabels: string[] = [
@@ -37,7 +38,7 @@ const Replies: FunctionComponent<RepliesProps> = ({ tabValueState }) => {
   return (
     <React.Fragment>
       {!state.repliesLoaded && state.loading ? (
-        <React.Fragment></React.Fragment>
+        <LoadingScreen></LoadingScreen>
       ) : (
         state.repliesLoaded &&
         tabViews.map((element, index) => {
