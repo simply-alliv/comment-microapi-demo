@@ -1,28 +1,32 @@
-import React, { FunctionComponent, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { FunctionComponent, useState, useContext } from "react";
 import Box from "@material-ui/core/Box";
-import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import TabViewIntroSection from "../../TabViewIntroSection";
+import CommentSelect from "../../CommentSelect";
+import { CommentsContext } from "../../../context/comments";
+import { Comment } from "../../../common/models";
+import { CommentsActionType } from "../../../common/enums";
 
 const deleteComponentEndpoints = ["DELETE /comments/:commentId"];
 const deleteComponentHeading = "Delete a comment";
 const deleteComponentSubtitle =
   "Then there are those times where deletion is required.";
 
-const comments = ["Comment 1", "Comment 2", "Comment 3", "Comment 4"];
-
-const useStyles = makeStyles({
-  root: {
-    display: "grid",
-  },
-});
-
 const DeleteComment: FunctionComponent = () => {
-  const [selectedComment, setSelectedComment] = useState(comments[0]);
+  const [state, dispatch] = useContext(CommentsContext);
+  const [selectedComment, setSelectedComment] = useState(state.comments[0]);
 
-  const classes = useStyles();
+  const handleSelectedCommentChange = (comment: Comment) => {
+    setSelectedComment(comment);
+  };
+
+  const handleDeleteSingleCommentClick = () => {
+    dispatch({
+      type: CommentsActionType.DELETE_COMMENT,
+      payload: { commentId: selectedComment.commentId },
+    });
+  };
 
   return (
     <React.Fragment>
@@ -36,23 +40,20 @@ const DeleteComment: FunctionComponent = () => {
           Select a comment you'd like to delete.
         </Typography>
       </Box>
-      <Grid container spacing={2}>
-        {comments.map((comment) => {
-          return (
-            <Grid className={classes.root} item xs={6} sm={3} key={comment}>
-              <Button
-                variant={selectedComment === comment ? "contained" : "outlined"}
-                onClick={() => setSelectedComment(comment)}
-              >
-                {comment}
-              </Button>
-            </Grid>
-          );
-        })}
-      </Grid>
+      <Box mb={1} display="flex" justifyContent="center">
+        <CommentSelect
+          state={state}
+          onChange={handleSelectedCommentChange}
+        ></CommentSelect>
+      </Box>
       <Box display="flex" flexDirection="column" alignItems="center" mt={4}>
-        <Button variant="contained" color="secondary">
-          Delete Comment
+        <Button
+          variant="contained"
+          color="secondary"
+          disabled={state.loading}
+          onClick={handleDeleteSingleCommentClick}
+        >
+          {state.loading ? "Please Wait..." : "Delete Comment"}
         </Button>
       </Box>
     </React.Fragment>
