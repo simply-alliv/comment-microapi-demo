@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useEffect } from "react";
+import React, { FunctionComponent, useContext } from "react";
 import {
   Box,
   Typography,
@@ -8,8 +8,9 @@ import {
   MenuItem,
   makeStyles,
 } from "@material-ui/core";
-import { State as CommentsContextState } from "../../context/comments";
-import { Comment, Reply } from "../../common/models";
+import { Reply } from "../../common/models";
+import { CommentsContext } from "../../context/comments";
+import { CommentsActionType } from "../../common/enums";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,81 +25,48 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type ReplySelectProps = {
-  state: CommentsContextState;
-  selectedComment?: Comment;
-  onChange: Function;
-};
-
-const ReplySelect: FunctionComponent<ReplySelectProps> = ({
-  state,
-  selectedComment,
-  onChange,
-}) => {
-  let firstUpdate = true;
-  const [selectedCommentReplies, setSelectedCommentReplies] = useState<Reply[]>(
-    []
-  );
-  const [selectedReply, setSelectedReply] = useState(selectedCommentReplies[0]);
+const ReplySelect: FunctionComponent = () => {
+  const [state, dispatch] = useContext(CommentsContext);
 
   const classes = useStyles();
 
   const handleSelectedReplyChange = (event: React.ChangeEvent<any>) => {
-    const replyId = event.target.value;
-    const selectedReply = selectedCommentReplies.find(
-      (reply: Reply) => reply.replyId === replyId
-    );
-    if (selectedReply) {
-      onChange(selectedReply);
-      setSelectedReply(selectedReply);
-    }
+    dispatch({
+      type: CommentsActionType.SET_SELECTED_REPLY,
+      payload: { replyId: event.target.value },
+    });
   };
-
-  useEffect(() => {
-    const _selectedCommentReplies = state.replies.filter(
-      (reply) => reply.commentId === selectedComment?.commentId
-    );
-
-    if (_selectedCommentReplies.length > 0) {
-      setSelectedCommentReplies(_selectedCommentReplies);
-      setSelectedReply(_selectedCommentReplies[0]);
-    } else {
-      setSelectedCommentReplies([]);
-      setSelectedReply([][0]);
-    }
-  }, [selectedComment, state]);
 
   return (
     <React.Fragment>
-      {selectedReply ? (
+      {state.selectedComment ? (
         <FormControl className={classes.formControl}>
           <Select
-            value={selectedReply.replyId}
+            value={state.selectedReply?.replyId ?? ""}
             onChange={handleSelectedReplyChange}
             displayEmpty
             className={classes.selectEmpty}
             inputProps={{ "aria-label": "selected reply ID" }}
           >
-            {selectedCommentReplies.map((reply: Reply) => {
-              if (firstUpdate) {
-                firstUpdate = false;
-                // Find a better solution for this. Updating state from within a render shouldn't be done.
-                onChange(selectedReply);
-              }
-
-              return (
-                <MenuItem value={reply.replyId} key={reply.replyId}>
-                  {reply.replyId.slice(0, 7)}
-                </MenuItem>
-              );
-            })}
+            {state.selectedCommentReplies &&
+            state.selectedCommentReplies?.length > 0 ? (
+              state.selectedCommentReplies.map((reply: Reply) => {
+                return (
+                  <MenuItem value={reply.replyId} key={reply.replyId}>
+                    {reply.replyId.slice(0, 7)}
+                  </MenuItem>
+                );
+              })
+            ) : (
+              <MenuItem value="No Reply">No Reply</MenuItem>
+            )}
           </Select>
           <FormHelperText>Selected Reply</FormHelperText>
         </FormControl>
       ) : (
         <Box display="flex" justifyContent="center">
-          <Typography variant="overline" align="center" color="textSecondary">
-            NO REPLIES EXIST FOR THIS COMMENT
+          <Typography variant="overline" align="center">
+            A SELECTED COMMENT IS REQURED
           </Typography>
         </Box>
       )}

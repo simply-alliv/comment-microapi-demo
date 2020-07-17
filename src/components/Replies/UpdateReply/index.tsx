@@ -1,11 +1,15 @@
-import React, { FunctionComponent, useContext, useState } from "react";
+import React, {
+  FunctionComponent,
+  useContext,
+  useState,
+  useEffect,
+} from "react";
 import { Box, Button, TextareaAutosize, Typography } from "@material-ui/core";
 import TabViewIntroSection from "../../TabViewIntroSection";
 import CommentSelect from "../../CommentSelect";
 import ReplySelect from "../../ReplySelect";
 import { CommentsContext } from "../../../context/comments";
 import { CommentsActionType } from "../../../common/enums";
-import { Reply } from "../../../common/models";
 
 const updateComponentEndpoints = [
   "PATCH /comments/:commentId/replies/:replyId",
@@ -15,31 +19,28 @@ const updateComponentSubtitle = "Sometimes we need to make some changes.";
 
 const UpdateReply: FunctionComponent = () => {
   const [state, dispatch] = useContext(CommentsContext);
-  const [selectedReply, setSelectedReply] = useState<Reply>([][0]);
+  const [content, setContent] = useState("");
+
+  useEffect(() => {
+    if (state.selectedReply) {
+      setContent(state.selectedReply.content);
+    }
+  }, [state.selectedReply]);
 
   const handleContentChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
-    const updatedReply = {
-      ...selectedReply,
-      content: event.target.value,
-    };
-
-    setSelectedReply(updatedReply);
-  };
-
-  const handleSelectedReplyChange = (reply: Reply) => {
-    setSelectedReply(reply);
+    setContent(event.target.value);
   };
 
   const handleUpdateSingleReplyClick = () => {
-    if (state.selectedComment) {
+    if (state.selectedComment && state.selectedReply) {
       dispatch({
         type: CommentsActionType.UPDATE_REPLY,
         payload: {
           commentId: state.selectedComment.commentId,
-          replyId: selectedReply.replyId,
-          updateReplyDTO: { content: selectedReply.content },
+          replyId: state.selectedReply.replyId,
+          updateReplyDTO: { content },
         },
       });
     }
@@ -66,11 +67,7 @@ const UpdateReply: FunctionComponent = () => {
         </Typography>
       </Box>
       <Box mb={1} display="flex" justifyContent="center">
-        <ReplySelect
-          state={state}
-          selectedComment={state.selectedComment}
-          onChange={handleSelectedReplyChange}
-        ></ReplySelect>
+        <ReplySelect></ReplySelect>
       </Box>
       <Box mt={6}>
         <Typography variant="body2" align="center" color="textSecondary">
@@ -81,7 +78,7 @@ const UpdateReply: FunctionComponent = () => {
         <TextareaAutosize
           rowsMin={5}
           rowsMax={5}
-          value={selectedReply?.content ?? ""}
+          value={content}
           onChange={handleContentChange}
         ></TextareaAutosize>
       </Box>
@@ -89,12 +86,12 @@ const UpdateReply: FunctionComponent = () => {
         <Button
           variant="contained"
           color="secondary"
-          disabled={state.loading || selectedReply?.replyId === undefined}
+          disabled={state.loading || state.selectedReply === undefined}
           onClick={handleUpdateSingleReplyClick}
         >
           {state.loading
             ? "Please Wait..."
-            : selectedReply?.replyId === undefined
+            : state.selectedReply === undefined
             ? "No Reply"
             : "Update Reply"}
         </Button>

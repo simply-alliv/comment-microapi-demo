@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import { Comment } from "../../common/models";
 import { CommentsContext } from "../../context/comments";
-import { CommentsResultType } from "../../common/enums";
+import { CommentsActionType } from "../../common/enums";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,11 +23,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// type CommentSelectProps = {
-//   state: CommentsContextState;
-//   onChange: Function;
-// };
-
 const CommentSelect: FunctionComponent = () => {
   const [state, dispatch] = useContext(CommentsContext);
 
@@ -35,7 +30,7 @@ const CommentSelect: FunctionComponent = () => {
 
   const handleSelectedCommentChange = (event: React.ChangeEvent<any>) => {
     dispatch({
-      type: CommentsResultType.SET_SELECTED_COMMENT,
+      type: CommentsActionType.SET_SELECTED_COMMENT,
       payload: { commentId: event.target.value },
     });
   };

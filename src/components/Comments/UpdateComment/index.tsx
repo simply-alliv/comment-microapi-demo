@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useContext } from "react";
+import React, {
+  FunctionComponent,
+  useContext,
+  useState,
+  useEffect,
+} from "react";
 
 import TabViewIntroSection from "../../TabViewIntroSection";
 import CommentSelect from "../../CommentSelect";
@@ -12,21 +17,18 @@ const updateComponentSubtitle = "Sometimes we need to make some changes.";
 
 const UpdateComment: FunctionComponent = () => {
   const [state, dispatch] = useContext(CommentsContext);
+  const [content, setContent] = useState("");
+
+  useEffect(() => {
+    if (state.selectedComment) {
+      setContent(state.selectedComment.content);
+    }
+  }, [state.selectedComment]);
 
   const handleContentChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
-    if (state.selectedComment) {
-      dispatch({
-        type: CommentsActionType.UPDATE_SELECTED_COMMENT,
-        payload: {
-          updatedComment: {
-            ...state.selectedComment,
-            content: event.target.value,
-          },
-        },
-      });
-    }
+    setContent(event.target.value);
   };
 
   const handleUpdateCommentClick = () => {
@@ -36,7 +38,7 @@ const UpdateComment: FunctionComponent = () => {
         payload: {
           commentId: state.selectedComment.commentId,
           updateCommentDTO: {
-            content: state.selectedComment.content,
+            content,
           },
         },
       });
@@ -66,9 +68,7 @@ const UpdateComment: FunctionComponent = () => {
         <TextareaAutosize
           rowsMin={5}
           rowsMax={5}
-          value={
-            state.selectedComment?.content ?? "There is no comment to update."
-          }
+          value={content}
           onChange={handleContentChange}
         ></TextareaAutosize>
       </Box>

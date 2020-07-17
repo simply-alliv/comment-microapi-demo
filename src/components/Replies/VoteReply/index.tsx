@@ -3,7 +3,6 @@ import { Box, Button, Grid, makeStyles, Typography } from "@material-ui/core";
 import TabViewIntroSection from "../../TabViewIntroSection";
 import { CommentsContext } from "../../../context/comments";
 import { CommentsActionType } from "../../../common/enums";
-import { Reply } from "../../../common/models";
 import CommentSelect from "../../CommentSelect";
 import ReplySelect from "../../ReplySelect";
 
@@ -26,17 +25,12 @@ const useStyles = makeStyles({
 
 const VoteReply: FunctionComponent = () => {
   const [state, dispatch] = useContext(CommentsContext);
-  const [selectedReply, setSelectedReply] = useState<Reply>([][0]);
   const [selectedVoteType, setSelectedVoteType] = useState(voteTypes[0]);
 
   const classes = useStyles();
 
-  const handleSelectedReplyChange = (reply: Reply) => {
-    setSelectedReply(reply);
-  };
-
   const handleVoteSingleReplyClick = () => {
-    if (state.selectedComment) {
+    if (state.selectedComment && state.selectedReply) {
       const type =
         selectedVoteType === voteTypes[0]
           ? CommentsActionType.UPVOTE_REPLY
@@ -46,7 +40,7 @@ const VoteReply: FunctionComponent = () => {
         type,
         payload: {
           commentId: state.selectedComment.commentId,
-          replyId: selectedReply.replyId,
+          replyId: state.selectedReply.replyId,
         },
       });
     }
@@ -73,11 +67,7 @@ const VoteReply: FunctionComponent = () => {
         </Typography>
       </Box>
       <Box mb={1} display="flex" justifyContent="center">
-        <ReplySelect
-          state={state}
-          selectedComment={state.selectedComment}
-          onChange={handleSelectedReplyChange}
-        ></ReplySelect>
+        <ReplySelect></ReplySelect>
       </Box>
       <Box mt={6} mb={1}>
         <Typography variant="body2" align="center" color="textSecondary">
@@ -107,13 +97,13 @@ const VoteReply: FunctionComponent = () => {
           disabled={
             state.loading ||
             state.selectedComment === undefined ||
-            selectedReply === undefined
+            state.selectedReply === undefined
           }
           onClick={handleVoteSingleReplyClick}
         >
           {state.loading
             ? "Please Wait..."
-            : selectedReply?.replyId === undefined
+            : state.selectedReply === undefined
             ? "No Reply"
             : selectedVoteType === voteTypes[0]
             ? "Upvote Reply"

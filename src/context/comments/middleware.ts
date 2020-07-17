@@ -43,13 +43,44 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
 
           const commentsReplies = await Promise.all(commentsRepliesPromises);
 
-          commentsReplies.forEach((commentReplies, index) => {
+          commentsReplies.forEach((commentReplies) => {
             if (commentReplies.length > 0) {
               helper.addReplies(commentReplies[0].commentId, commentReplies);
             }
           });
+
+          dispatch({
+            type: CommentsResultType.SET_SELECTED_COMMENT,
+            payload: { commentId: comments[0].commentId },
+          });
         } catch (error) {
           setLoading(false, dispatch);
+        }
+
+        break;
+      }
+
+      /**
+       * Set the selected comment, or reply, dispatch middleware
+       */
+      case CommentsActionType.SET_SELECTED_COMMENT:
+      case CommentsActionType.SET_SELECTED_REPLY: {
+        try {
+          if (action.type === CommentsActionType.SET_SELECTED_COMMENT) {
+            dispatch({
+              type: CommentsResultType.SET_SELECTED_COMMENT,
+              payload: { commentId: action.payload.commentId },
+            });
+          }
+
+          if (action.type === CommentsActionType.SET_SELECTED_REPLY) {
+            dispatch({
+              type: CommentsResultType.SET_SELECTED_REPLY,
+              payload: { replyId: action.payload.replyId },
+            });
+          }
+        } catch (error) {
+          console.log(error);
         }
 
         break;
@@ -119,21 +150,6 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
             commentId
           );
           helper.updateComment(updatedComment);
-        } catch (error) {
-          setLoading(false, dispatch);
-        }
-
-        break;
-      }
-
-      /**
-       * Update a selected comment dispatch middleware
-       */
-      case CommentsActionType.UPDATE_SELECTED_COMMENT: {
-        setLoading(true, dispatch);
-
-        try {
-          helper.updateSelectedComment(action.payload.updatedComment);
         } catch (error) {
           setLoading(false, dispatch);
         }

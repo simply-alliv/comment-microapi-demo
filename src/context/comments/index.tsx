@@ -13,6 +13,8 @@ export interface State {
   comments: Comment[];
   replies: Reply[];
   selectedComment?: Comment;
+  selectedCommentReplies?: Reply[];
+  selectedReply?: Reply;
   commentsLoaded: boolean;
   repliesLoaded: boolean;
   loading: boolean;
@@ -22,6 +24,8 @@ const initialState: State = {
   comments: [],
   replies: [],
   selectedComment: undefined,
+  selectedCommentReplies: undefined,
+  selectedReply: undefined,
   commentsLoaded: false,
   repliesLoaded: false,
   loading: false,
@@ -76,9 +80,14 @@ const reducer = (state: State, action: any) => {
           (comment) => comment.commentId === commentId
         );
 
+        const commentReplies = state.replies.filter(
+          (reply) => reply.commentId === commentId
+        );
+
         updatedState = {
           ...state,
           selectedComment: comment,
+          selectedCommentReplies: commentReplies,
         };
       }
 
@@ -136,16 +145,6 @@ const reducer = (state: State, action: any) => {
       return updatedState;
     }
 
-    case CommentsResultType.UPDATE_SELECTED_COMMENT: {
-      const updatedState = {
-        ...state,
-        selectedComment: action.payload.updatedComment,
-        loading: false,
-      };
-
-      return updatedState;
-    }
-
     case CommentsResultType.REMOVE_COMMENT: {
       if (!commentExists(action.payload.commentId)) {
         state.comments.filter(
@@ -162,6 +161,23 @@ const reducer = (state: State, action: any) => {
     }
 
     // Replies reducers
+    case CommentsResultType.SET_SELECTED_REPLY: {
+      const replyId = action.payload.replyId;
+
+      let updatedState: State = { ...state };
+
+      if (state.selectedReply?.replyId !== replyId) {
+        const reply = state.replies.find((reply) => reply.replyId === replyId);
+
+        updatedState = {
+          ...state,
+          selectedReply: reply,
+        };
+      }
+
+      return updatedState;
+    }
+
     case CommentsResultType.ADD_REPLY: {
       const { commentId, reply } = action.payload;
       if (!replyExists(commentId, reply.replyId)) {
