@@ -4,7 +4,7 @@ import Tab from "@material-ui/core/Tab";
 
 type TabBarProps = {
   tabLabels: string[];
-  tabValueState: [any, React.Dispatch<React.SetStateAction<any>>];
+  tabValueState: [number, React.Dispatch<React.SetStateAction<number>>];
 };
 
 function a11yProps(tabLabel: string, index: number) {

@@ -8,6 +8,7 @@ import VoteComment from "./VoteComment";
 import FlagComment from "./FlagComment";
 import StateFooter from "../StateFooter";
 import { CommentsContext } from "../../context/comments";
+import mockCommentProps from "../../context/comments/mock-comment-props"
 
 export const tabLabels: string[] = [
   "Comment Create",
@@ -28,7 +29,7 @@ export const tabViews: ReactElement[] = [
 ];
 
 type CommentsProps = {
-  tabValueState: [any, React.Dispatch<React.SetStateAction<any>>];
+  tabValueState: [number, React.Dispatch<React.SetStateAction<number>>];
 };
 
 const Comments: FunctionComponent<CommentsProps> = ({ tabValueState }) => {
@@ -52,7 +53,7 @@ const Comments: FunctionComponent<CommentsProps> = ({ tabValueState }) => {
           );
         })
       )}
-      <StateFooter />
+      <StateFooter comments={mockCommentProps} />
     </React.Fragment>
   );
 };
