@@ -5,7 +5,7 @@ import CommentSelect from "../../CommentSelect";
 import ReplySelect from "../../ReplySelect";
 import { CommentsContext } from "../../../context/comments";
 import { CommentsActionType } from "../../../common/enums";
-import { Comment, Reply } from "../../../common/models";
+import { Reply } from "../../../common/models";
 
 const updateComponentEndpoints = [
   "PATCH /comments/:commentId/replies/:replyId",
@@ -15,7 +15,6 @@ const updateComponentSubtitle = "Sometimes we need to make some changes.";
 
 const UpdateReply: FunctionComponent = () => {
   const [state, dispatch] = useContext(CommentsContext);
-  const [selectedComment, setSelectedComment] = useState(state.comments[0]);
   const [selectedReply, setSelectedReply] = useState<Reply>([][0]);
 
   const handleContentChange = (
@@ -29,23 +28,21 @@ const UpdateReply: FunctionComponent = () => {
     setSelectedReply(updatedReply);
   };
 
-  const handleSelectedCommentChange = (comment: Comment) => {
-    setSelectedComment(comment);
-  };
-
   const handleSelectedReplyChange = (reply: Reply) => {
     setSelectedReply(reply);
   };
 
   const handleUpdateSingleReplyClick = () => {
-    dispatch({
-      type: CommentsActionType.UPDATE_REPLY,
-      payload: {
-        commentId: selectedComment.commentId,
-        replyId: selectedReply.replyId,
-        updateReplyDTO: { content: selectedReply.content },
-      },
-    });
+    if (state.selectedComment) {
+      dispatch({
+        type: CommentsActionType.UPDATE_REPLY,
+        payload: {
+          commentId: state.selectedComment.commentId,
+          replyId: selectedReply.replyId,
+          updateReplyDTO: { content: selectedReply.content },
+        },
+      });
+    }
   };
 
   return (
@@ -61,10 +58,7 @@ const UpdateReply: FunctionComponent = () => {
         </Typography>
       </Box>
       <Box mb={1} display="flex" justifyContent="center">
-        <CommentSelect
-          state={state}
-          onChange={handleSelectedCommentChange}
-        ></CommentSelect>
+        <CommentSelect></CommentSelect>
       </Box>
       <Box mt={6} mb={1}>
         <Typography variant="body2" align="center" color="textSecondary">
@@ -74,7 +68,7 @@ const UpdateReply: FunctionComponent = () => {
       <Box mb={1} display="flex" justifyContent="center">
         <ReplySelect
           state={state}
-          selectedComment={selectedComment}
+          selectedComment={state.selectedComment}
           onChange={handleSelectedReplyChange}
         ></ReplySelect>
       </Box>

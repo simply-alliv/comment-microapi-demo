@@ -45,13 +45,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
 
           commentsReplies.forEach((commentReplies, index) => {
             if (commentReplies.length > 0) {
-              dispatch({
-                type: CommentsResultType.ADD_REPLIES,
-                payload: {
-                  commentId: comments[index].commentId,
-                  replies: commentReplies,
-                },
-              });
+              helper.addReplies(commentReplies[0].commentId, commentReplies);
             }
           });
         } catch (error) {
@@ -125,6 +119,21 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
             commentId
           );
           helper.updateComment(updatedComment);
+        } catch (error) {
+          setLoading(false, dispatch);
+        }
+
+        break;
+      }
+
+      /**
+       * Update a selected comment dispatch middleware
+       */
+      case CommentsActionType.UPDATE_SELECTED_COMMENT: {
+        setLoading(true, dispatch);
+
+        try {
+          helper.updateSelectedComment(action.payload.updatedComment);
         } catch (error) {
           setLoading(false, dispatch);
         }

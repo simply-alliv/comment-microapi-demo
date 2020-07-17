@@ -1,9 +1,8 @@
-import React, { FunctionComponent, useState, useContext } from "react";
+import React, { FunctionComponent, useContext } from "react";
 import { Box, Button, Typography } from "@material-ui/core";
 import TabViewIntroSection from "../../../TabViewIntroSection";
 import CommentSelect from "../../../CommentSelect";
 import { CommentsContext } from "../../../../context/comments";
-import { Comment } from "../../../../common/models";
 import { CommentsActionType } from "../../../../common/enums";
 
 const getSingleCommentEndpoint = ["GET /comments/commentId"];
@@ -12,17 +11,14 @@ const getSingleCommentSubtitle = "Need to get just one comment?";
 
 const SingleComment: FunctionComponent = () => {
   const [state, dispatch] = useContext(CommentsContext);
-  const [selectedComment, setSelectedComment] = useState(state.comments[0]);
-
-  const handleSelectedCommentChange = (comment: Comment) => {
-    setSelectedComment(comment);
-  };
 
   const handleGetSingleCommentsClick = () => {
-    dispatch({
-      type: CommentsActionType.GET_COMMENT,
-      payload: { commentId: selectedComment.commentId },
-    });
+    if (state.selectedComment) {
+      dispatch({
+        type: CommentsActionType.GET_COMMENT,
+        payload: { commentId: state.selectedComment.commentId },
+      });
+    }
   };
 
   return (
@@ -38,10 +34,7 @@ const SingleComment: FunctionComponent = () => {
         </Typography>
       </Box>
       <Box mb={1} display="flex" justifyContent="center">
-        <CommentSelect
-          state={state}
-          onChange={handleSelectedCommentChange}
-        ></CommentSelect>
+        <CommentSelect></CommentSelect>
       </Box>
       <Box display="flex" flexDirection="column" alignItems="center" mt={4}>
         <Button

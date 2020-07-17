@@ -12,6 +12,7 @@ import { CommentsActionType, CommentsResultType } from "../../common/enums";
 export interface State {
   comments: Comment[];
   replies: Reply[];
+  selectedComment?: Comment;
   commentsLoaded: boolean;
   repliesLoaded: boolean;
   loading: boolean;
@@ -20,6 +21,7 @@ export interface State {
 const initialState: State = {
   comments: [],
   replies: [],
+  selectedComment: undefined,
   commentsLoaded: false,
   repliesLoaded: false,
   loading: false,
@@ -27,7 +29,13 @@ const initialState: State = {
 
 // Creat Context Object
 export const CommentsContext = createContext<
-  [State, React.Dispatch<{ type: CommentsActionType; payload?: any }>]
+  [
+    State,
+    React.Dispatch<{
+      type: CommentsActionType | CommentsResultType;
+      payload?: any;
+    }>
+  ]
 >([initialState, () => null]);
 
 const reducer = (state: State, action: any) => {
@@ -58,6 +66,25 @@ const reducer = (state: State, action: any) => {
   // The switch block for the reducer actions.
   switch (action.type) {
     // Comments reducers
+    case CommentsResultType.SET_SELECTED_COMMENT: {
+      const commentId = action.payload.commentId;
+
+      let updatedState: State = { ...state };
+
+      if (state.selectedComment?.commentId !== commentId) {
+        const comment = state.comments.find(
+          (comment) => comment.commentId === commentId
+        );
+
+        updatedState = {
+          ...state,
+          selectedComment: comment,
+        };
+      }
+
+      return updatedState;
+    }
+
     case CommentsResultType.ADD_COMMENT: {
       const comment = action.payload.comment;
 
@@ -103,6 +130,16 @@ const reducer = (state: State, action: any) => {
 
       const updatedState = {
         ...state,
+        loading: false,
+      };
+
+      return updatedState;
+    }
+
+    case CommentsResultType.UPDATE_SELECTED_COMMENT: {
+      const updatedState = {
+        ...state,
+        selectedComment: action.payload.updatedComment,
         loading: false,
       };
 

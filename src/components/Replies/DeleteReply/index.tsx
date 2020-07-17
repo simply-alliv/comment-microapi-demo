@@ -4,7 +4,7 @@ import TabViewIntroSection from "../../TabViewIntroSection";
 import CommentSelect from "../../CommentSelect";
 import ReplySelect from "../../ReplySelect";
 import { CommentsContext } from "../../../context/comments";
-import { Comment, Reply } from "../../../common/models";
+import { Reply } from "../../../common/models";
 import { CommentsActionType } from "../../../common/enums";
 
 const deleteComponentEndpoints = [
@@ -16,25 +16,22 @@ const deleteComponentSubtitle =
 
 const DeleteReply: FunctionComponent = () => {
   const [state, dispatch] = useContext(CommentsContext);
-  const [selectedComment, setSelectedComment] = useState(state.comments[0]);
   const [selectedReply, setSelectedReply] = useState<Reply>([][0]);
-
-  const handleSelectedCommentChange = (comment: Comment) => {
-    setSelectedComment(comment);
-  };
 
   const handleSelectedReplyChange = (reply: Reply) => {
     setSelectedReply(reply);
   };
 
   const handleDeleteSingleReplyClick = () => {
-    dispatch({
-      type: CommentsActionType.DELETE_REPLY,
-      payload: {
-        commentId: selectedComment.commentId,
-        replyId: selectedReply.replyId,
-      },
-    });
+    if (state.selectedComment) {
+      dispatch({
+        type: CommentsActionType.DELETE_REPLY,
+        payload: {
+          commentId: state.selectedComment.commentId,
+          replyId: selectedReply.replyId,
+        },
+      });
+    }
   };
 
   return (
@@ -50,10 +47,7 @@ const DeleteReply: FunctionComponent = () => {
         </Typography>
       </Box>
       <Box mb={1} display="flex" justifyContent="center">
-        <CommentSelect
-          state={state}
-          onChange={handleSelectedCommentChange}
-        ></CommentSelect>
+        <CommentSelect></CommentSelect>
       </Box>
       <Box mt={6} mb={1}>
         <Typography variant="body2" align="center" color="textSecondary">
@@ -63,7 +57,7 @@ const DeleteReply: FunctionComponent = () => {
       <Box mb={1} display="flex" justifyContent="center">
         <ReplySelect
           state={state}
-          selectedComment={selectedComment}
+          selectedComment={state.selectedComment}
           onChange={handleSelectedReplyChange}
         ></ReplySelect>
       </Box>
@@ -71,7 +65,11 @@ const DeleteReply: FunctionComponent = () => {
         <Button
           variant="contained"
           color="secondary"
-          disabled={state.loading || selectedReply?.replyId === undefined}
+          disabled={
+            state.loading ||
+            state.selectedComment === undefined ||
+            selectedReply === undefined
+          }
           onClick={handleDeleteSingleReplyClick}
         >
           {state.loading

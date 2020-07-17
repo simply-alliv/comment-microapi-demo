@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 type ReplySelectProps = {
   state: CommentsContextState;
-  selectedComment: Comment;
+  selectedComment?: Comment;
   onChange: Function;
 };
 
@@ -56,7 +56,7 @@ const ReplySelect: FunctionComponent<ReplySelectProps> = ({
 
   useEffect(() => {
     const _selectedCommentReplies = state.replies.filter(
-      (reply) => reply.commentId === selectedComment.commentId
+      (reply) => reply.commentId === selectedComment?.commentId
     );
 
     if (_selectedCommentReplies.length > 0) {

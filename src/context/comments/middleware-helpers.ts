@@ -29,6 +29,13 @@ class DispatchMiddlewareHelper {
     });
   }
 
+  updateSelectedComment(updatedComment: Comment) {
+    this.dispatch({
+      type: CommentsResultType.UPDATE_SELECTED_COMMENT,
+      payload: { updatedComment },
+    });
+  }
+
   removeComment(commentId: string) {
     this.dispatch({
       type: CommentsResultType.REMOVE_COMMENT,

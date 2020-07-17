@@ -4,7 +4,6 @@ import TabViewIntroSection from "../../../TabViewIntroSection";
 import CommentSelect from "../../../CommentSelect";
 import { CommentsContext } from "../../../../context/comments";
 import { CommentsActionType } from "../../../../common/enums";
-import { Comment } from "../../../../common/models";
 
 const getAllReplyEndpoint = ["GET /comments/:commentId/replies"];
 const getAllReplyHeading = "GET all replies";
@@ -21,19 +20,16 @@ const useStyles = makeStyles(() => ({
 const AllReplies: FunctionComponent = () => {
   const [state, dispatch] = useContext(CommentsContext);
   const [selectedFilters, setSelectedFilters] = useState("");
-  const [selectedComment, setSelectedComment] = useState(state.comments[0]);
 
   const classes = useStyles();
 
-  const handleSelectedCommentChange = (comment: Comment) => {
-    setSelectedComment(comment);
-  };
-
   const handleGetAllRepliesClick = () => {
-    dispatch({
-      type: CommentsActionType.GET_ALL_REPLIES,
-      payload: { commentId: selectedComment.commentId },
-    });
+    if (state.selectedComment) {
+      dispatch({
+        type: CommentsActionType.GET_ALL_REPLIES,
+        payload: { commentId: state.selectedComment.commentId },
+      });
+    }
   };
 
   return (
@@ -49,10 +45,7 @@ const AllReplies: FunctionComponent = () => {
         </Typography>
       </Box>
       <Box mb={1} display="flex" justifyContent="center">
-        <CommentSelect
-          state={state}
-          onChange={handleSelectedCommentChange}
-        ></CommentSelect>
+        <CommentSelect></CommentSelect>
       </Box>
       <Box mt={6} mb={1}>
         <Typography variant="body2" align="center" color="textSecondary">
@@ -79,12 +72,16 @@ const AllReplies: FunctionComponent = () => {
         <Button
           variant="contained"
           color="secondary"
-          disabled={state.loading || selectedComment.numOfReplies === 0}
+          disabled={
+            state.loading ||
+            state.selectedComment === undefined ||
+            state.selectedComment?.numOfReplies === 0
+          }
           onClick={handleGetAllRepliesClick}
         >
           {state.loading
             ? "Please Wait..."
-            : selectedComment.numOfReplies === 0
+            : state.selectedComment?.numOfReplies === 0
             ? "No Reply"
             : "Get All Replies"}
         </Button>
