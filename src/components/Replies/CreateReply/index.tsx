@@ -28,7 +28,10 @@ const CreateReply: FunctionComponent = () => {
   const handleCreateReplyClick = () => {
     dispatch({
       type: CommentsActionType.CREATE_REPLY,
-      payload: { commentId: selectedComment.commentId, content },
+      payload: {
+        commentId: selectedComment.commentId,
+        createReplyDTO: { content },
+      },
     });
   };
 

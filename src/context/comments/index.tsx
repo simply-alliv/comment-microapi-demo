@@ -7,18 +7,21 @@ import React, {
 import dispatchMiddleware from "./middleware";
 import { Comment, Reply } from "../../common/models";
 import { CommentsActionType, CommentsResultType } from "../../common/enums";
-import { mockComments } from "./mock";
 
 // State
 export interface State {
   comments: Comment[];
   replies: Reply[];
+  commentsLoaded: boolean;
+  repliesLoaded: boolean;
   loading: boolean;
 }
 
 const initialState: State = {
-  comments: mockComments,
+  comments: [],
   replies: [],
+  commentsLoaded: false,
+  repliesLoaded: false,
   loading: false,
 };
 
@@ -45,7 +48,7 @@ const reducer = (state: State, action: any) => {
   const replyExists = (commentId: string, replyId: string): boolean => {
     let existingReply = undefined;
 
-    if (!commentExists(commentId)) {
+    if (commentExists(commentId)) {
       existingReply = state.replies.find((reply) => reply.replyId === replyId);
     }
 
@@ -69,7 +72,7 @@ const reducer = (state: State, action: any) => {
     }
 
     case CommentsResultType.ADD_COMMENTS: {
-      action.payload.forEach((comment: Comment) => {
+      action.payload.comments.forEach((comment: Comment) => {
         if (!commentExists(comment.commentId)) {
           state.comments.push(comment);
         }
@@ -77,6 +80,7 @@ const reducer = (state: State, action: any) => {
 
       const updatedState = {
         ...state,
+        commentsLoaded: true,
         loading: false,
       };
 
@@ -142,6 +146,7 @@ const reducer = (state: State, action: any) => {
 
       const updatedState = {
         ...state,
+        repliesLoaded: true,
         loading: false,
       };
 
@@ -206,8 +211,12 @@ export const CommentsContextProvider: FunctionComponent<CommentsContextProviderP
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    // if ()
-  });
+    if (!(state.commentsLoaded && state.repliesLoaded)) {
+      const dispatchMW = dispatchMiddleware(dispatch);
+
+      dispatchMW({ type: CommentsActionType.INIT_STATE });
+    }
+  }, [state.commentsLoaded, state.repliesLoaded]);
 
   return (
     <CommentsContext.Provider value={[state, dispatchMiddleware(dispatch)]}>

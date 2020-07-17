@@ -1,4 +1,6 @@
 enum CommentsActionType {
+  INIT_STATE,
+  RESET_STATE,
   GET_ALL_COMMENTS,
   GET_COMMENT,
   CREATE_COMMENT,
@@ -15,7 +17,6 @@ enum CommentsActionType {
   DOWNVOTE_REPLY,
   FLAG_REPLY,
   DELETE_REPLY,
-  RESET_STATE,
 }
 
 export default CommentsActionType;

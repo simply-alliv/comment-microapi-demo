@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ReactElement } from "react";
+import React, { FunctionComponent, ReactElement, useContext } from "react";
 import TabPanel from "../TabPanel";
 import CreateReply from "./CreateReply";
 import GetReply from "./GetReply";
@@ -7,6 +7,7 @@ import DeleteReply from "./DeleteReply";
 import VoteReply from "./VoteReply";
 import FlagReply from "./FlagReply";
 import StateFooter from "../StateFooter";
+import { CommentsContext } from "../../context/comments";
 
 export const tabLabels: string[] = [
   "Reply Create",
@@ -31,19 +32,26 @@ type RepliesProps = {
 };
 
 const Replies: FunctionComponent<RepliesProps> = ({ tabValueState }) => {
+  const state = useContext(CommentsContext)[0];
+
   return (
     <React.Fragment>
-      {tabViews.map((element, index) => {
-        return (
-          <TabPanel
-            key={tabLabels[index]}
-            tabIndex={index}
-            activeTabIndex={tabValueState[0]}
-          >
-            {element}
-          </TabPanel>
-        );
-      })}
+      {!state.repliesLoaded && state.loading ? (
+        <React.Fragment></React.Fragment>
+      ) : (
+        state.repliesLoaded &&
+        tabViews.map((element, index) => {
+          return (
+            <TabPanel
+              key={tabLabels[index]}
+              tabIndex={index}
+              activeTabIndex={tabValueState[0]}
+            >
+              {element}
+            </TabPanel>
+          );
+        })
+      )}
       <StateFooter />
     </React.Fragment>
   );

@@ -1,15 +1,16 @@
-import React, { FunctionComponent, useState } from "react";
+import React, { FunctionComponent, useState, useContext } from "react";
 import { Box, Button, Grid, makeStyles, Typography } from "@material-ui/core";
 import TabViewIntroSection from "../../../TabViewIntroSection";
+import CommentSelect from "../../../CommentSelect";
+import { CommentsContext } from "../../../../context/comments";
+import { CommentsActionType } from "../../../../common/enums";
+import { Comment } from "../../../../common/models";
 
 const getAllReplyEndpoint = ["GET /comments/:commentId/replies"];
 const getAllReplyHeading = "GET all replies";
 const getAllReplySubtitle = "Need to get some replies?";
 
-const filters = [
-  "By flag state",
-  "By owner ID",
-];
+const filters = ["By flag state", "By owner ID"];
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -18,9 +19,22 @@ const useStyles = makeStyles(() => ({
 }));
 
 const AllReplies: FunctionComponent = () => {
+  const [state, dispatch] = useContext(CommentsContext);
   const [selectedFilters, setSelectedFilters] = useState("");
+  const [selectedComment, setSelectedComment] = useState(state.comments[0]);
 
   const classes = useStyles();
+
+  const handleSelectedCommentChange = (comment: Comment) => {
+    setSelectedComment(comment);
+  };
+
+  const handleGetAllRepliesClick = () => {
+    dispatch({
+      type: CommentsActionType.GET_ALL_REPLIES,
+      payload: { commentId: selectedComment.commentId },
+    });
+  };
 
   return (
     <Box>
@@ -29,6 +43,17 @@ const AllReplies: FunctionComponent = () => {
         heading={getAllReplyHeading}
         subtitle={getAllReplySubtitle}
       ></TabViewIntroSection>
+      <Box mt={6} mb={1}>
+        <Typography variant="body2" align="center" color="textSecondary">
+          Select a comment to access for its replies.
+        </Typography>
+      </Box>
+      <Box mb={1} display="flex" justifyContent="center">
+        <CommentSelect
+          state={state}
+          onChange={handleSelectedCommentChange}
+        ></CommentSelect>
+      </Box>
       <Box mt={6} mb={1}>
         <Typography variant="body2" align="center" color="textSecondary">
           Need to filter for specifc replies? No problem.
@@ -51,8 +76,17 @@ const AllReplies: FunctionComponent = () => {
         ))}
       </Grid>
       <Box display="flex" flexDirection="column" alignItems="center" mt={6}>
-        <Button variant="contained" color="secondary">
-          Get Replies
+        <Button
+          variant="contained"
+          color="secondary"
+          disabled={state.loading || selectedComment.numOfReplies === 0}
+          onClick={handleGetAllRepliesClick}
+        >
+          {state.loading
+            ? "Please Wait..."
+            : selectedComment.numOfReplies === 0
+            ? "No Reply"
+            : "Get All Replies"}
         </Button>
       </Box>
     </Box>

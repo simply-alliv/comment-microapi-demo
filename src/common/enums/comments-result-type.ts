@@ -1,4 +1,5 @@
 enum CommentsResultType {
+  SET_LOADING,
   ADD_COMMENT,
   ADD_COMMENTS,
   UPDATE_COMMENT,
@@ -11,7 +12,6 @@ enum CommentsResultType {
   UPDATE_REPLY_UPVOTE,
   UPDATE_REPLY_DOWNVOTE,
   REMOVE_REPLY,
-  SET_LOADING,
 }
 
 export default CommentsResultType;

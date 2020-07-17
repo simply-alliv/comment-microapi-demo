@@ -16,7 +16,7 @@ class CommentService {
     this.ownerId = ownerId;
   }
 
-  getAllComments(pageQuery?: any): Comment[] {
+  getAllComments(pageQuery?: any): Promise<Comment[]> {
     return this.sdkInstance.getAllComments(pageQuery).then((response: any) => {
       return response.records.map((record: any) =>
         this.mapDataToComment(record)
@@ -24,7 +24,7 @@ class CommentService {
     });
   }
 
-  getSingleComment(commentId: string): Comment {
+  getSingleComment(commentId: string): Promise<Comment> {
     return this.sdkInstance
       .getSingleComment(commentId)
       .then((response: any) => {
@@ -74,7 +74,7 @@ class CommentService {
   }
 
   /** REPLIES */
-  getAllReplies(commentId: string, pageQuery?: any): Comment[] {
+  getAllReplies(commentId: string, pageQuery?: any): Promise<Reply[]> {
     return this.sdkInstance
       .getAllReplies(commentId, pageQuery)
       .then((response: any) => {
@@ -84,7 +84,7 @@ class CommentService {
       });
   }
 
-  getSingleReply(commentId: string, replyId: string): Comment {
+  getSingleReply(commentId: string, replyId: string): Promise<Reply> {
     return this.sdkInstance
       .getSingleReply(commentId, replyId)
       .then((response: any) => {
@@ -96,7 +96,10 @@ class CommentService {
     return this.sdkInstance.getReplyVotes(commentId, replyId);
   }
 
-  createSingleReply(commentId: string, createReplyDTO: { content: string }) {
+  createSingleReply(
+    commentId: string,
+    createReplyDTO: { content: string }
+  ): Promise<Reply> {
     return this.sdkInstance
       .createReply(commentId, {
         ...createReplyDTO,
@@ -155,7 +158,6 @@ class CommentService {
   };
 
   private mapDataToReply = (data: any) => {
-    console.log(data);
     return new Reply(
       data.commentId,
       data.replyId,
@@ -164,7 +166,9 @@ class CommentService {
       data.numOfVotes,
       data.numOfUpVotes,
       data.numOfDownVotes,
-      data.numOfFlags
+      data.numOfFlags,
+      data.createdAt,
+      data.updatedAt
     );
   };
 }

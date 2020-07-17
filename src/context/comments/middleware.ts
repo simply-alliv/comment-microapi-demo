@@ -1,6 +1,7 @@
 import React from "react";
 import CommentService from "../../services/comment";
 import { CommentsActionType, CommentsResultType } from "../../common/enums";
+import { Reply } from "../../common/models";
 
 const commentService = new CommentService();
 commentService.initializeState("you@gmail.com");
@@ -15,19 +16,62 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
   return async (action: any) => {
     switch (action.type) {
       /**
+       * Initialize all comments and replies dispatch middleware
+       */
+      case CommentsActionType.INIT_STATE: {
+        setLoading(true, dispatch);
+
+        try {
+          const comments = await commentService.getAllComments(action.payload);
+
+          const commentsRepliesPromises: Promise<Reply[]>[] = [];
+
+          comments.forEach((comment) => {
+            commentsRepliesPromises.push(
+              commentService.getAllReplies(comment.commentId)
+            );
+          });
+
+          dispatch({
+            type: CommentsResultType.ADD_COMMENTS,
+            payload: {
+              comments,
+            },
+          });
+
+          const commentsReplies = await Promise.all(commentsRepliesPromises);
+
+          commentsReplies.forEach((commentReplies, index) => {
+            if (commentReplies.length > 0) {
+              dispatch({
+                type: CommentsResultType.ADD_REPLIES,
+                payload: {
+                  commentId: comments[index].commentId,
+                  replies: commentReplies,
+                },
+              });
+            }
+          });
+        } catch (error) {
+          setLoading(false, dispatch);
+          console.log(error);
+        }
+
+        break;
+      }
+
+      /**
        * Get all comments dispatch middleware
        */
       case CommentsActionType.GET_ALL_COMMENTS: {
         setLoading(true, dispatch);
 
         try {
-          const allComments = await commentService.getAllComments(
-            action.payload
-          );
+          const comments = await commentService.getAllComments(action.payload);
 
           dispatch({
             type: CommentsResultType.ADD_COMMENTS,
-            payload: allComments,
+            payload: { comments },
           });
         } catch (error) {
           setLoading(false, dispatch);
@@ -185,9 +229,10 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
         setLoading(true, dispatch);
 
         try {
-          await commentService.flagSingleComment(action.payload.commentId);
+          const { commentId } = action.payload;
+          await commentService.flagSingleComment(commentId);
           const updatedComment = await commentService.getSingleComment(
-            action.payload.commentId
+            commentId
           );
 
           dispatch({
@@ -211,13 +256,17 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
         setLoading(true, dispatch);
 
         try {
-          const allReplies = await commentService.getAllReplies(action.payload);
+          const { commentId, pageQuery } = action.payload;
+          const replies = await commentService.getAllReplies(
+            commentId,
+            pageQuery
+          );
 
           dispatch({
             type: CommentsResultType.ADD_REPLIES,
             payload: {
-              commentId: action.payload.commentId,
-              replies: allReplies,
+              commentId,
+              replies,
             },
           });
         } catch (error) {
@@ -240,7 +289,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
 
           dispatch({
             type: CommentsResultType.ADD_REPLY,
-            payload: reply,
+            payload: { commentId, reply },
           });
         } catch (error) {
           setLoading(false, dispatch);
@@ -262,6 +311,9 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
             commentId,
             createReplyDTO
           );
+          const updatedComment = await commentService.getSingleComment(
+            commentId
+          );
 
           dispatch({
             type: CommentsResultType.ADD_REPLY,
@@ -269,6 +321,11 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
               commentId,
               reply,
             },
+          });
+
+          dispatch({
+            type: CommentsResultType.UPDATE_COMMENT,
+            payload: updatedComment,
           });
         } catch (error) {
           setLoading(false, dispatch);
@@ -295,6 +352,9 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
             commentId,
             replyId
           );
+          const updatedComment = await commentService.getSingleComment(
+            commentId
+          );
 
           dispatch({
             type: CommentsResultType.UPDATE_REPLY,
@@ -302,6 +362,11 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
               commentId,
               updatedReply,
             },
+          });
+
+          dispatch({
+            type: CommentsResultType.UPDATE_COMMENT,
+            payload: updatedComment,
           });
         } catch (error) {
           setLoading(false, dispatch);
@@ -321,9 +386,18 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
           const { commentId, replyId } = action.payload;
           await commentService.deleteSingleReply(commentId, replyId);
 
+          const updatedComment = await commentService.getSingleComment(
+            commentId
+          );
+
           dispatch({
             type: CommentsResultType.REMOVE_REPLY,
             payload: { commentId, replyId },
+          });
+
+          dispatch({
+            type: CommentsResultType.UPDATE_COMMENT,
+            payload: updatedComment,
           });
         } catch (error) {
           setLoading(false, dispatch);
