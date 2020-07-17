@@ -8,7 +8,7 @@ import VoteComment from "./VoteComment";
 import FlagComment from "./FlagComment";
 import StateFooter from "../StateFooter";
 import { CommentsContext } from "../../context/comments";
-import mockCommentProps from "../../context/comments/mock-comment-props"
+import mockCommentProps from "../../context/comments/mock-comment-props";
 
 export const tabLabels: string[] = [
   "Comment Create",

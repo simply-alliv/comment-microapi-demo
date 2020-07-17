@@ -2,9 +2,12 @@ import React from "react";
 import CommentService from "../../services/comment";
 import { CommentsActionType, CommentsResultType } from "../../common/enums";
 import { Reply } from "../../common/models";
+import DispatchMiddlewareHelper from "./middleware-helpers";
 
 const commentService = new CommentService();
 commentService.initializeState("you@gmail.com");
+
+let helper: DispatchMiddlewareHelper;
 
 /**
  * Middleware for dispatch which performs the async operations of the CommentSDK, if and
@@ -14,6 +17,10 @@ commentService.initializeState("you@gmail.com");
  */
 const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
   return async (action: any) => {
+    if (!helper) {
+      helper = new DispatchMiddlewareHelper(dispatch);
+    }
+
     switch (action.type) {
       /**
        * Initialize all comments and replies dispatch middleware
@@ -32,12 +39,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
             );
           });
 
-          dispatch({
-            type: CommentsResultType.ADD_COMMENTS,
-            payload: {
-              comments,
-            },
-          });
+          helper.addComments(comments);
 
           const commentsReplies = await Promise.all(commentsRepliesPromises);
 
@@ -54,7 +56,6 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
           });
         } catch (error) {
           setLoading(false, dispatch);
-          console.log(error);
         }
 
         break;
@@ -68,14 +69,9 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
 
         try {
           const comments = await commentService.getAllComments(action.payload);
-
-          dispatch({
-            type: CommentsResultType.ADD_COMMENTS,
-            payload: { comments },
-          });
+          helper.addComments(comments);
         } catch (error) {
           setLoading(false, dispatch);
-          console.log(error);
         }
 
         break;
@@ -88,17 +84,11 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
         setLoading(true, dispatch);
 
         try {
-          const comment = await commentService.getSingleComment(
-            action.payload.commentId
-          );
-
-          dispatch({
-            type: CommentsResultType.ADD_COMMENT,
-            payload: comment,
-          });
+          const commentId = action.payload.commentId;
+          const comment = await commentService.getSingleComment(commentId);
+          helper.addComment(comment);
         } catch (error) {
           setLoading(false, dispatch);
-          console.log(error);
         }
 
         break;
@@ -114,14 +104,9 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
           const comment = await commentService.createSingleComment(
             action.payload
           );
-
-          dispatch({
-            type: CommentsResultType.ADD_COMMENT,
-            payload: comment,
-          });
+          helper.addComment(comment);
         } catch (error) {
           setLoading(false, dispatch);
-          console.log(error);
         }
 
         break;
@@ -139,14 +124,9 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
           const updatedComment = await commentService.getSingleComment(
             commentId
           );
-
-          dispatch({
-            type: CommentsResultType.UPDATE_COMMENT,
-            payload: updatedComment,
-          });
+          helper.updateComment(updatedComment);
         } catch (error) {
           setLoading(false, dispatch);
-          console.log(error);
         }
 
         break;
@@ -159,16 +139,11 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
         setLoading(true, dispatch);
 
         try {
-          const { commentId } = action.payload;
+          const commentId = action.payload.commentId;
           await commentService.deleteSingleComment(commentId);
-
-          dispatch({
-            type: CommentsResultType.REMOVE_COMMENT,
-            payload: { commentId },
-          });
+          helper.removeComment(commentId);
         } catch (error) {
           setLoading(false, dispatch);
-          console.log(error);
         }
 
         break;
@@ -181,18 +156,14 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
         setLoading(true, dispatch);
 
         try {
-          await commentService.upvoteSingleComment(action.payload.commentId);
+          const commentId = action.payload.commentId;
+          await commentService.upvoteSingleComment(commentId);
           const updatedComment = await commentService.getSingleComment(
-            action.payload.commentId
+            commentId
           );
-
-          dispatch({
-            type: CommentsResultType.UPDATE_COMMENT,
-            payload: updatedComment,
-          });
+          helper.updateComment(updatedComment);
         } catch (error) {
           setLoading(false, dispatch);
-          console.log(error);
         }
 
         break;
@@ -205,18 +176,14 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
         setLoading(true, dispatch);
 
         try {
-          await commentService.downvoteSingleComment(action.payload.commentId);
+          const commentId = action.payload.commentId;
+          await commentService.downvoteSingleComment(commentId);
           const updatedComment = await commentService.getSingleComment(
-            action.payload.commentId
+            commentId
           );
-
-          dispatch({
-            type: CommentsResultType.UPDATE_COMMENT,
-            payload: updatedComment,
-          });
+          helper.updateComment(updatedComment);
         } catch (error) {
           setLoading(false, dispatch);
-          console.log(error);
         }
 
         break;
@@ -229,19 +196,14 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
         setLoading(true, dispatch);
 
         try {
-          const { commentId } = action.payload;
+          const commentId = action.payload.commentId;
           await commentService.flagSingleComment(commentId);
           const updatedComment = await commentService.getSingleComment(
             commentId
           );
-
-          dispatch({
-            type: CommentsResultType.UPDATE_COMMENT,
-            payload: updatedComment,
-          });
+          helper.updateComment(updatedComment);
         } catch (error) {
           setLoading(false, dispatch);
-          console.log(error);
         }
 
         break;
@@ -261,17 +223,9 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
             commentId,
             pageQuery
           );
-
-          dispatch({
-            type: CommentsResultType.ADD_REPLIES,
-            payload: {
-              commentId,
-              replies,
-            },
-          });
+          helper.addReplies(commentId, replies);
         } catch (error) {
           setLoading(false, dispatch);
-          console.log(error);
         }
 
         break;
@@ -286,14 +240,9 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
         try {
           const { commentId, replyId } = action.payload;
           const reply = await commentService.getSingleReply(commentId, replyId);
-
-          dispatch({
-            type: CommentsResultType.ADD_REPLY,
-            payload: { commentId, reply },
-          });
+          helper.addReply(commentId, reply);
         } catch (error) {
           setLoading(false, dispatch);
-          console.log(error);
         }
 
         break;
@@ -314,22 +263,10 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
           const updatedComment = await commentService.getSingleComment(
             commentId
           );
-
-          dispatch({
-            type: CommentsResultType.ADD_REPLY,
-            payload: {
-              commentId,
-              reply,
-            },
-          });
-
-          dispatch({
-            type: CommentsResultType.UPDATE_COMMENT,
-            payload: updatedComment,
-          });
+          helper.addReply(commentId, reply);
+          helper.updateComment(updatedComment);
         } catch (error) {
           setLoading(false, dispatch);
-          console.log(error);
         }
 
         break;
@@ -355,22 +292,10 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
           const updatedComment = await commentService.getSingleComment(
             commentId
           );
-
-          dispatch({
-            type: CommentsResultType.UPDATE_REPLY,
-            payload: {
-              commentId,
-              updatedReply,
-            },
-          });
-
-          dispatch({
-            type: CommentsResultType.UPDATE_COMMENT,
-            payload: updatedComment,
-          });
+          helper.updateReply(commentId, updatedReply);
+          helper.updateComment(updatedComment);
         } catch (error) {
           setLoading(false, dispatch);
-          console.log(error);
         }
 
         break;
@@ -390,18 +315,10 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
             commentId
           );
 
-          dispatch({
-            type: CommentsResultType.REMOVE_REPLY,
-            payload: { commentId, replyId },
-          });
-
-          dispatch({
-            type: CommentsResultType.UPDATE_COMMENT,
-            payload: updatedComment,
-          });
+          helper.removeReply(commentId, replyId);
+          helper.updateComment(updatedComment);
         } catch (error) {
           setLoading(false, dispatch);
-          console.log(error);
         }
 
         break;
@@ -420,11 +337,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
             commentId,
             replyId
           );
-
-          dispatch({
-            type: CommentsResultType.UPDATE_REPLY,
-            payload: { commentId, updatedReply },
-          });
+          helper.updateReply(commentId, updatedReply);
         } catch (error) {
           setLoading(false, dispatch);
           console.log(error);
@@ -446,14 +359,9 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
             commentId,
             replyId
           );
-
-          dispatch({
-            type: CommentsResultType.UPDATE_REPLY,
-            payload: { commentId, updatedReply },
-          });
+          helper.updateReply(commentId, updatedReply);
         } catch (error) {
           setLoading(false, dispatch);
-          console.log(error);
         }
 
         break;
@@ -472,11 +380,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
             commentId,
             replyId
           );
-
-          dispatch({
-            type: CommentsResultType.UPDATE_REPLY,
-            payload: { commentId, updatedReply },
-          });
+          helper.updateReply(commentId, updatedReply);
         } catch (error) {
           setLoading(false, dispatch);
           console.log(error);

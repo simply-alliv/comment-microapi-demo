@@ -59,8 +59,10 @@ const reducer = (state: State, action: any) => {
   switch (action.type) {
     // Comments reducers
     case CommentsResultType.ADD_COMMENT: {
-      if (!commentExists(action.payload.commentId)) {
-        state.comments.push(action.payload);
+      const comment = action.payload.comment;
+
+      if (!commentExists(comment.commentId)) {
+        state.comments.push(comment);
       }
 
       const updatedState = {
@@ -72,7 +74,9 @@ const reducer = (state: State, action: any) => {
     }
 
     case CommentsResultType.ADD_COMMENTS: {
-      action.payload.comments.forEach((comment: Comment) => {
+      const comments = action.payload.comments;
+
+      comments.forEach((comment: Comment) => {
         if (!commentExists(comment.commentId)) {
           state.comments.push(comment);
         }
@@ -88,7 +92,7 @@ const reducer = (state: State, action: any) => {
     }
 
     case CommentsResultType.UPDATE_COMMENT: {
-      const updatedComment = action.payload;
+      const updatedComment = action.payload.updatedComment;
       if (commentExists(updatedComment.commentId)) {
         state.comments.forEach((comment, index) => {
           if (comment.commentId === updatedComment.commentId) {
