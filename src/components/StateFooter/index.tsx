@@ -21,11 +21,11 @@ const StateFooter = () => {
 
   const handleViewState = () => setOpen(true);
 
-  const handleResetState = () => {
-    dispatch({
-      type: CommentsActionType.RESET_STATE,
-    });
-  };
+  // const handleResetState = () => {
+  //   dispatch({
+  //     type: CommentsActionType.RESET_STATE,
+  //   });
+  // };
 
   const handleOk = () => {
     if (state.isSelectedCommentDialogOpen) {
@@ -43,9 +43,10 @@ const StateFooter = () => {
     <div className={classes.root}>
       <Box display="flex" justifyContent="space-between" p={2}>
         <Button onClick={handleViewState}>View Current State</Button>
-        <Button onClick={handleResetState} disabled>
+        <div></div>
+        {/* <Button onClick={handleResetState} disabled>
           Reset State
-        </Button>
+        </Button> */}
       </Box>
       <Box>
         <CommentDialog
