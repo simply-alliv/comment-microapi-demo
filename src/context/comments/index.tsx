@@ -110,16 +110,12 @@ const reducer = (state: State, action: any) => {
     }
 
     case CommentsResultType.ADD_COMMENTS: {
-      const comments = action.payload.comments;
-
-      comments.forEach((comment: Comment) => {
-        if (!commentExists(comment.commentId)) {
-          state.comments.push(comment);
-        }
-      });
+      const newComments = action.payload.comments;
 
       const updatedState = {
         ...state,
+        comments: newComments,
+        selectedComment: undefined,
         commentsLoaded: true,
         loading: false,
       };
