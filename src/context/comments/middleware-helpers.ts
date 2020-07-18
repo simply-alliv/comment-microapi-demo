@@ -50,7 +50,7 @@ class DispatchMiddlewareHelper {
     });
   }
 
-  addReplies(commentId: string, replies: Reply[]) {
+  addReplies(commentId: string | undefined, replies: Reply[]) {
     this.dispatch({
       type: CommentsResultType.ADD_REPLIES,
       payload: {

@@ -205,7 +205,7 @@ const reducer = (state: State, action: any) => {
     case CommentsResultType.ADD_REPLIES: {
       const { commentId, replies } = action.payload;
 
-      if (commentId.length > 0) {
+      if (commentId) {
         replies.forEach((reply: Reply) => {
           if (!replyExists(commentId, reply.replyId)) {
             state.replies.push(reply);
@@ -218,8 +218,6 @@ const reducer = (state: State, action: any) => {
         repliesLoaded: true,
         loading: false,
       };
-
-      console.log(action.payload);
 
       return updatedState;
     }

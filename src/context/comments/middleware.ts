@@ -17,7 +17,7 @@ let helper: DispatchMiddlewareHelper;
  */
 const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
   return async (action: any) => {
-    if (!helper) {
+    if (helper === undefined) {
       helper = new DispatchMiddlewareHelper(dispatch);
     }
 
@@ -46,11 +46,11 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
           const commentsReplies = await Promise.all(commentsRepliesPromises);
 
           if (commentsReplies.length > 0) {
-            commentsReplies.forEach((commentReplies) => {
-              helper.addReplies(commentReplies[0].commentId, commentReplies);
+            commentsReplies.forEach((replies) => {
+              helper.addReplies(replies[0]?.commentId, replies);
             });
           } else {
-            helper.addReplies("", []);
+            helper.addReplies(undefined, []);
           }
 
           dispatch({
