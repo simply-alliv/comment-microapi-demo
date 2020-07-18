@@ -139,6 +139,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
           const commentId = action.payload.commentId;
           const comment = await commentService.getSingleComment(commentId);
           helper.addComment(comment);
+          helper.setSelectedCommentDialogOpen(true);
         } catch (error) {
           setLoading(false, dispatch);
         }
@@ -157,6 +158,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
             action.payload
           );
           helper.addComment(comment);
+          helper.setSelectedCommentDialogOpen(true);
         } catch (error) {
           setLoading(false, dispatch);
         }
@@ -177,6 +179,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
             commentId
           );
           helper.updateComment(updatedComment);
+          helper.setSelectedCommentDialogOpen(true);
         } catch (error) {
           setLoading(false, dispatch);
         }
@@ -214,6 +217,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
             commentId
           );
           helper.updateComment(updatedComment);
+          helper.setSelectedCommentDialogOpen(true);
         } catch (error) {
           setLoading(false, dispatch);
         }
@@ -234,6 +238,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
             commentId
           );
           helper.updateComment(updatedComment);
+          helper.setSelectedCommentDialogOpen(true);
         } catch (error) {
           setLoading(false, dispatch);
         }
@@ -254,6 +259,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
             commentId
           );
           helper.updateComment(updatedComment);
+          helper.setSelectedCommentDialogOpen(true);
         } catch (error) {
           setLoading(false, dispatch);
         }
@@ -293,6 +299,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
           const { commentId, replyId } = action.payload;
           const reply = await commentService.getSingleReply(commentId, replyId);
           helper.addReply(commentId, reply);
+          helper.setSelectedCommentDialogOpen(true);
         } catch (error) {
           setLoading(false, dispatch);
         }
@@ -317,6 +324,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
           );
           helper.addReply(commentId, reply);
           helper.updateComment(updatedComment);
+          helper.setSelectedCommentDialogOpen(true);
         } catch (error) {
           setLoading(false, dispatch);
         }
@@ -346,6 +354,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
           );
           helper.updateReply(commentId, updatedReply);
           helper.updateComment(updatedComment);
+          helper.setSelectedCommentDialogOpen(true);
         } catch (error) {
           setLoading(false, dispatch);
         }
@@ -390,6 +399,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
             replyId
           );
           helper.updateReply(commentId, updatedReply);
+          helper.setSelectedCommentDialogOpen(true);
         } catch (error) {
           setLoading(false, dispatch);
           console.log(error);
@@ -412,6 +422,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
             replyId
           );
           helper.updateReply(commentId, updatedReply);
+          helper.setSelectedCommentDialogOpen(true);
         } catch (error) {
           setLoading(false, dispatch);
         }
@@ -433,6 +444,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
             replyId
           );
           helper.updateReply(commentId, updatedReply);
+          helper.setSelectedCommentDialogOpen(true);
         } catch (error) {
           setLoading(false, dispatch);
           console.log(error);

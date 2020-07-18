@@ -16,7 +16,7 @@ const useStyles = makeStyles({
 });
 
 const StateFooter = () => {
-  const dispatch = useContext(CommentsContext)[1];
+  const [state, dispatch] = useContext(CommentsContext);
   const [open, setOpen] = React.useState(false);
 
   const handleViewState = () => setOpen(true);
@@ -27,7 +27,15 @@ const StateFooter = () => {
     });
   };
 
-  const handleClose = () => setOpen(false);
+  const handleOk = () => {
+    if (state.isSelectedCommentDialogOpen) {
+      dispatch({
+        type: CommentsActionType.SET_SELECTED_COMMENT_DIALOG_OPEN,
+        payload: { isOpen: false },
+      });
+    }
+    setOpen(false);
+  };
 
   const classes = useStyles();
 
@@ -39,12 +47,15 @@ const StateFooter = () => {
       </Box>
       <Box>
         <CommentDialog
-          isOpen={open}
-          handleClose={handleClose}
+          isOpen={open || state.isSelectedCommentDialogOpen}
+          handleOk={handleOk}
           title={"Current State"}
-          subtitle={"The curent saved state of your comments."}
-          okLabel={"Reset state"}
-          cancelLabel={"Let me continue"}
+          subtitle={
+            state.isSelectedCommentDialogOpen
+              ? "The current state of your selected comment and its replies."
+              : "The curent state of your comments and replies."
+          }
+          okLabel={"Close"}
         />
       </Box>
     </div>

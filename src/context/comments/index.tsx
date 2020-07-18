@@ -14,6 +14,7 @@ export interface State {
   replies: Reply[];
   selectedComment?: Comment;
   selectedCommentReplies?: Reply[];
+  isSelectedCommentDialogOpen: boolean;
   selectedReply?: Reply;
   commentsLoaded: boolean;
   repliesLoaded: boolean;
@@ -25,6 +26,7 @@ const initialState: State = {
   replies: [],
   selectedComment: undefined,
   selectedCommentReplies: undefined,
+  isSelectedCommentDialogOpen: false,
   selectedReply: undefined,
   commentsLoaded: false,
   repliesLoaded: false,
@@ -90,6 +92,15 @@ const reducer = (state: State, action: any) => {
           selectedCommentReplies: commentReplies,
         };
       }
+
+      return updatedState;
+    }
+
+    case CommentsResultType.SET_SELECTED_COMMENT_DIALOG_OPEN: {
+      const updatedState = {
+        ...state,
+        isSelectedCommentDialogOpen: action.payload.isOpen,
+      };
 
       return updatedState;
     }

@@ -8,6 +8,13 @@ import { CommentsResultType } from "../../common/enums";
 class DispatchMiddlewareHelper {
   constructor(private dispatch: React.Dispatch<any>) {}
 
+  setSelectedCommentDialogOpen(isOpen: boolean) {
+    this.dispatch({
+      type: CommentsResultType.SET_SELECTED_COMMENT_DIALOG_OPEN,
+      payload: { isOpen },
+    });
+  }
+
   addComment(comment: Comment) {
     this.dispatch({
       type: CommentsResultType.ADD_COMMENT,
