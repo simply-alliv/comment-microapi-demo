@@ -19,7 +19,7 @@ const replies: ReplyModel[] = [
     replyId: "5f10dca328a306001e18b298",
     ownerId: "you@gmail.com",
     content:
-      "Good morning James. That’s right. I will see you then at the Cocoa Wah Wah.",
+      "Good morning James. That’s right. I will see you then at the Cocoa Cha Chi.",
     numOfVotes: 0,
     numOfUpVotes: 0,
     numOfDownVotes: 0,
