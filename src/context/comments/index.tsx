@@ -114,6 +114,7 @@ const reducer = (state: State, action: any) => {
 
       const updatedState = {
         ...state,
+        selectedComment: comment,
         loading: false,
       };
 
@@ -153,12 +154,9 @@ const reducer = (state: State, action: any) => {
     }
 
     case CommentsResultType.REMOVE_COMMENT: {
-      let filteredComments = state.comments;
-      if (!commentExists(action.payload.commentId)) {
-        filteredComments = state.comments.filter(
-          (comment) => comment.commentId !== action.payload.commentId
-        );
-      }
+      const filteredComments = state.comments.filter(
+        (comment) => comment.commentId !== action.payload.commentId
+      );
 
       const updatedState = {
         ...state,
@@ -190,12 +188,14 @@ const reducer = (state: State, action: any) => {
 
     case CommentsResultType.ADD_REPLY: {
       const { commentId, reply } = action.payload;
+
       if (!replyExists(commentId, reply.replyId)) {
         state.replies.push(reply);
       }
 
       const updatedState = {
         ...state,
+        selectedReply: reply,
         loading: false,
       };
 
@@ -240,14 +240,11 @@ const reducer = (state: State, action: any) => {
     }
 
     case CommentsResultType.REMOVE_REPLY: {
-      const { commentId, replyId } = action.payload;
-      let filteredReplies = state.replies;
+      const { replyId } = action.payload;
 
-      if (!replyExists(commentId, replyId)) {
-        filteredReplies = state.replies.filter(
-          (reply) => reply.replyId !== replyId
-        );
-      }
+      const filteredReplies = state.replies.filter(
+        (reply) => reply.replyId !== replyId
+      );
 
       const updatedState = {
         ...state,

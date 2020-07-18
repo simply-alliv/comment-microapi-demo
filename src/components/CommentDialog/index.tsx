@@ -80,7 +80,23 @@ const CommentDialog: FunctionComponent<CommentDialogProps> = ({
               };
               const allComments = () => (
                 <Box py={1} key={comment.commentId}>
-                  <Typography variant="h6">{`Comment ${index + 1}`}</Typography>
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
+                    <Typography variant="h6">{`Comment ${
+                      index + 1
+                    }`}</Typography>
+                    <Box py={1}></Box>
+                    {state.selectedComment?.commentId === comment.commentId ? (
+                      <Typography variant="body1" color="secondary">
+                        Current Selection
+                      </Typography>
+                    ) : (
+                      <div></div>
+                    )}
+                  </Box>
                   <Box mb={1}></Box>
                   <Comment
                     key={comment.commentId}
@@ -90,7 +106,7 @@ const CommentDialog: FunctionComponent<CommentDialogProps> = ({
                 </Box>
               );
 
-              if (state.isSelectedCommentDialogOpen) {
+              if (state.isSelectedCommentDialogOpen && state.selectedComment) {
                 return selectedComment();
               } else {
                 return allComments();
