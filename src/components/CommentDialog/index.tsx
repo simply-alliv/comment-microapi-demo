@@ -2,6 +2,7 @@ import React, { FunctionComponent, useContext } from "react";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
+import Typography from "@material-ui/core/Typography";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
@@ -56,12 +57,16 @@ const CommentDialog: FunctionComponent<CommentDialogProps> = ({
         </DialogContent>
         <DialogContent dividers>
           <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
-            {state.comments.map((comment) => (
-              <Comment
-                key={comment.commentId}
-                comment={comment}
-                replies={getRepliesForComment(comment.commentId)}
-              />
+            {state.comments.map((comment, index) => (
+              <Box py={1} key={comment.commentId}>
+                <Typography variant="h6">{`Comment ${index + 1}`}</Typography>
+                <Box mb={1}></Box>
+                <Comment
+                  key={comment.commentId}
+                  comment={comment}
+                  replies={getRepliesForComment(comment.commentId)}
+                />
+              </Box>
             ))}
           </DialogContentText>
         </DialogContent>
