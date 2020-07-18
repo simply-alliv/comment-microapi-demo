@@ -55,7 +55,7 @@ const StateFooter = () => {
               ? "The current state of your selected comment and its replies."
               : "The curent state of your comments and replies."
           }
-          okLabel={"Go back"}
+          okLabel={"Close"}
         />
       </Box>
     </div>
