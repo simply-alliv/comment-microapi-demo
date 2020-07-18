@@ -45,11 +45,13 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
 
           const commentsReplies = await Promise.all(commentsRepliesPromises);
 
-          commentsReplies.forEach((commentReplies) => {
-            if (commentReplies.length > 0) {
+          if (commentsReplies.length > 0) {
+            commentsReplies.forEach((commentReplies) => {
               helper.addReplies(commentReplies[0].commentId, commentReplies);
-            }
-          });
+            });
+          } else {
+            helper.addReplies("", []);
+          }
 
           dispatch({
             type: CommentsResultType.SET_SELECTED_COMMENT,
@@ -120,7 +122,6 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
         try {
           const pageQuery = action.payload.pageQuery;
           const comments = await commentService.getAllComments(pageQuery);
-          console.log(comments);
           helper.addComments(comments);
           helper.setSelectedCommentDialogOpen(true);
         } catch (error) {
