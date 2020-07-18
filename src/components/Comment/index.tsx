@@ -4,6 +4,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
+import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 import Reply from "./Reply";
 import {
@@ -34,6 +35,29 @@ const Comment: FunctionComponent<CommentProps> = ({ comment, replies }) => {
           <Typography variant="caption" color="textSecondary">
             {calculateTimeSince(comment.createdAt)}
           </Typography>
+          <Box pt={2}></Box>
+          <Divider />
+          <Box pt={2} display="flex" justifyContent="space-between">
+            <Box display="flex" alignItems="center">
+              <Box display="flex" alignItems="center" pr={2}>
+                <Typography color="textSecondary">Upvotes </Typography>
+                <Box pr={1}></Box>
+                <Typography>{`${comment.numOfUpVotes}`}</Typography>
+              </Box>
+              <Box display="flex" alignItems="center">
+                <Typography color="textSecondary">Downvotes</Typography>
+                <Box pr={1}></Box>
+                <Typography>{`${comment.numOfDownVotes}`}</Typography>
+              </Box>
+            </Box>
+            <div>
+              {comment.numOfFlags > 0 ? (
+                <Typography variant="caption" color="error">
+                  Flagged
+                </Typography>
+              ) : null}
+            </div>
+          </Box>
         </CardContent>
       </Card>
       <Box py={2}>
