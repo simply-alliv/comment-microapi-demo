@@ -20,20 +20,18 @@ const useStyles = makeStyles({
 type CallBackFunction = () => void;
 type CommentDialogProps = {
   isOpen?: boolean;
-  handleClose: CallBackFunction;
+  handleOk: CallBackFunction;
   title?: string;
   subtitle?: string;
   okLabel?: string;
-  cancelLabel?: string;
 };
 
 const CommentDialog: FunctionComponent<CommentDialogProps> = ({
   isOpen = false,
-  handleClose,
+  handleOk,
   title = "Title",
   subtitle = "Subtitle",
   okLabel = "Ok",
-  cancelLabel = "Cancel",
 }) => {
   const state = useContext(CommentsContext)[0];
   const classes = useStyles();
@@ -46,8 +44,8 @@ const CommentDialog: FunctionComponent<CommentDialogProps> = ({
     <div>
       <Dialog
         open={isOpen}
-        onClose={handleClose}
-        scroll={"paper"}
+        onClose={handleOk}
+        scroll="paper"
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description"
       >
@@ -57,17 +55,44 @@ const CommentDialog: FunctionComponent<CommentDialogProps> = ({
         </DialogContent>
         <DialogContent dividers>
           <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
-            {state.comments.map((comment, index) => (
-              <Box py={1} key={comment.commentId}>
-                <Typography variant="h6">{`Comment ${index + 1}`}</Typography>
-                <Box mb={1}></Box>
-                <Comment
-                  key={comment.commentId}
-                  comment={comment}
-                  replies={getRepliesForComment(comment.commentId)}
-                />
-              </Box>
-            ))}
+            {state.comments.map((comment, index) => {
+              const selectedComment = () => {
+                if (comment.commentId !== state.selectedComment?.commentId) {
+                  return null;
+                }
+
+                return (
+                  <Box py={1} key={comment.commentId}>
+                    <Typography variant="h6">{`Comment ${
+                      index + 1
+                    }`}</Typography>
+                    <Box mb={1}></Box>
+                    <Comment
+                      key={comment.commentId}
+                      comment={comment}
+                      replies={getRepliesForComment(comment.commentId)}
+                    />
+                  </Box>
+                );
+              };
+              const allComments = () => (
+                <Box py={1} key={comment.commentId}>
+                  <Typography variant="h6">{`Comment ${index + 1}`}</Typography>
+                  <Box mb={1}></Box>
+                  <Comment
+                    key={comment.commentId}
+                    comment={comment}
+                    replies={getRepliesForComment(comment.commentId)}
+                  />
+                </Box>
+              );
+
+              if (state.isSelectedCommentDialogOpen) {
+                return selectedComment();
+              } else {
+                return allComments();
+              }
+            })}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -76,17 +101,9 @@ const CommentDialog: FunctionComponent<CommentDialogProps> = ({
               className={classes.button}
               color="secondary"
               fullWidth={true}
-              onClick={handleClose}
+              onClick={handleOk}
             >
               {okLabel}
-            </Button>
-            <Button
-              className={classes.button}
-              color="secondary"
-              fullWidth={true}
-              onClick={handleClose}
-            >
-              {cancelLabel}
             </Button>
           </Box>
         </DialogActions>
