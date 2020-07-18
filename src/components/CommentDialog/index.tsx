@@ -15,6 +15,9 @@ const useStyles = makeStyles({
   button: {
     justifyContent: "flex-end",
   },
+  dialogContentSubtitle: {
+    overflowY: "visible",
+  },
 });
 
 type CallBackFunction = () => void;
@@ -50,7 +53,7 @@ const CommentDialog: FunctionComponent<CommentDialogProps> = ({
         aria-describedby="scroll-dialog-description"
       >
         <DialogTitle id="scroll-dialog-title">{title}</DialogTitle>
-        <DialogContent>
+        <DialogContent className={classes.dialogContentSubtitle}>
           <DialogContentText>{subtitle}</DialogContentText>
         </DialogContent>
         <DialogContent dividers>
