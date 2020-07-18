@@ -43,7 +43,9 @@ const StateFooter = () => {
     <div className={classes.root}>
       <Box display="flex" justifyContent="space-between" p={2}>
         <Button onClick={handleViewState}>View Current State</Button>
-        <Button onClick={handleResetState}>Reset State</Button>
+        <Button onClick={handleResetState} disabled>
+          Reset State
+        </Button>
       </Box>
       <Box>
         <CommentDialog

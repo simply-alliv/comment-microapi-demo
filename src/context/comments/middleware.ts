@@ -122,6 +122,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
           const comments = await commentService.getAllComments(pageQuery);
           console.log(comments);
           helper.addComments(comments);
+          helper.setSelectedCommentDialogOpen(true);
         } catch (error) {
           setLoading(false, dispatch);
         }
@@ -198,6 +199,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
           await commentService.deleteSingleComment(commentId);
           helper.removeComment(commentId);
         } catch (error) {
+          console.log(error);
           setLoading(false, dispatch);
         }
 
@@ -282,6 +284,7 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
             pageQuery
           );
           helper.addReplies(commentId, replies);
+          helper.setSelectedCommentDialogOpen(true);
         } catch (error) {
           setLoading(false, dispatch);
         }
