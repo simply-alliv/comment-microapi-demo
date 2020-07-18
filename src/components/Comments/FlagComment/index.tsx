@@ -46,7 +46,11 @@ const FlagComment: FunctionComponent = () => {
           disabled={state.loading || state.selectedComment === undefined}
           onClick={handleFlagSingleCommentClick}
         >
-          {state.loading ? "Please Wait..." : "Flag Comment"}
+          {state.loading
+            ? "Please Wait..."
+            : state.selectedComment === undefined
+            ? "No Comment"
+            : "Flag Comment"}
         </Button>
       </Box>
     </React.Fragment>

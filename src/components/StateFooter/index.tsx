@@ -9,6 +9,9 @@ const useStyles = makeStyles({
     position: "fixed",
     width: "100%",
     bottom: 0,
+    zIndex: 100,
+    backgroundImage:
+      "linear-gradient(to top, rgba(35, 57, 255, 0.5) 10%, rgba(0, 0, 0, 0.3)) 90%",
   },
 });
 
