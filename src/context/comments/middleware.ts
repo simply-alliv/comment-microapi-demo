@@ -29,7 +29,9 @@ const dispatchMiddleware = (dispatch: React.Dispatch<any>) => {
         setLoading(true, dispatch);
 
         try {
-          const comments = await commentService.getAllComments();
+          const comments = await commentService.getAllComments({
+            sort: "desc",
+          });
 
           const commentsRepliesPromises: Promise<Reply[]>[] = [];
 
