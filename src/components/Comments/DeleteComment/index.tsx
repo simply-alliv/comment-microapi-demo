@@ -46,7 +46,11 @@ const DeleteComment: FunctionComponent = () => {
           disabled={state.loading || state.selectedComment === undefined}
           onClick={handleDeleteSingleCommentClick}
         >
-          {state.loading ? "Please Wait..." : "Delete Comment"}
+          {state.loading
+            ? "Please Wait..."
+            : state.selectedComment === undefined
+            ? "No Comment"
+            : "Delete Comment"}
         </Button>
       </Box>
     </React.Fragment>

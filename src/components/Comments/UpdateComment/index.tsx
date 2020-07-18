@@ -79,7 +79,11 @@ const UpdateComment: FunctionComponent = () => {
           disabled={state.loading || state.selectedComment === undefined}
           onClick={handleUpdateCommentClick}
         >
-          {state.loading ? "Please Wait..." : "Update Comment"}
+          {state.loading
+            ? "Please Wait..."
+            : state.selectedComment === undefined
+            ? "No Comment"
+            : "Update Comment"}
         </Button>
       </Box>
     </React.Fragment>

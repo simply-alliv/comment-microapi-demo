@@ -146,14 +146,17 @@ const reducer = (state: State, action: any) => {
     }
 
     case CommentsResultType.REMOVE_COMMENT: {
+      let filteredComments = state.comments;
       if (!commentExists(action.payload.commentId)) {
-        state.comments.filter(
+        filteredComments = state.comments.filter(
           (comment) => comment.commentId !== action.payload.commentId
         );
       }
 
       const updatedState = {
         ...state,
+        comments: filteredComments,
+        selectedComment: undefined,
         loading: false,
       };
 
@@ -231,13 +234,18 @@ const reducer = (state: State, action: any) => {
 
     case CommentsResultType.REMOVE_REPLY: {
       const { commentId, replyId } = action.payload;
+      let filteredReplies = state.replies;
 
       if (!replyExists(commentId, replyId)) {
-        state.replies.filter((reply) => reply.replyId !== replyId);
+        filteredReplies = state.replies.filter(
+          (reply) => reply.replyId !== replyId
+        );
       }
 
       const updatedState = {
         ...state,
+        replies: filteredReplies,
+        selectedReply: undefined,
         loading: false,
       };
 

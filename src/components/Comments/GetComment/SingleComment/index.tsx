@@ -40,10 +40,14 @@ const SingleComment: FunctionComponent = () => {
         <Button
           variant="contained"
           color="secondary"
-          disabled={state.loading}
+          disabled={state.loading || state.selectedComment === undefined}
           onClick={handleGetSingleCommentsClick}
         >
-          {state.loading ? "Please Wait..." : "Get Comment"}
+          {state.loading
+            ? "Please Wait..."
+            : state.selectedComment === undefined
+            ? "No Comment"
+            : "Get Comment"}
         </Button>
       </Box>
     </Box>

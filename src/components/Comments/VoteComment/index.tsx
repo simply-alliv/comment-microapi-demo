@@ -85,11 +85,13 @@ const VoteComment: FunctionComponent = () => {
         <Button
           variant="contained"
           color="secondary"
-          disabled={state.loading}
+          disabled={state.loading || state.selectedComment === undefined}
           onClick={handleVoteSingleCommentClick}
         >
           {state.loading
             ? "Please Wait..."
+            : state.selectedComment === undefined
+            ? "No Comment"
             : selectedVoteType === voteTypes[0]
             ? "Upvote Comment"
             : "Downvote Comment"}
