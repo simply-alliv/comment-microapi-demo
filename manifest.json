@@ -1,0 +1,9 @@
+{
+  "short_name": "Comments App",
+  "name": "Comments API Demo App",
+  "icons": [],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
