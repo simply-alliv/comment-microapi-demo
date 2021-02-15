@@ -17,6 +17,8 @@ jobs:
         run: |
           npm install
           npm run build
+        env:
+          REACT_APP_COMMENTS_API_APP_TOKEN: ${{ secrets.REACT_APP_COMMENTS_API_APP_TOKEN }}
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.0.0
